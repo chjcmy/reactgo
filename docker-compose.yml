@@ -1,0 +1,27 @@
+version: "3"
+
+services: 
+    backend:
+        build: 
+            context: ./backend/
+            dockerfile: dockerfile
+        ports: 
+            - "8080:8080"
+        restart: unless-stopped
+        expose: 
+            - 8080
+        networks: 
+            - backend
+    
+    front:
+        build:  
+            context: ./front/
+            dockerfile: dockerfile
+        ports: 
+            - "80:80"
+        volumes: 
+            - /usr/src/app/nodemodules
+            - ./front/:/usr/src/app
+        stdin_open: true
+    
+        
