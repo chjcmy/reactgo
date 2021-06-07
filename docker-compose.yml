@@ -12,7 +12,7 @@ services:
             - 8000
     front:
         build:  
-            context: ./front/
+            context: ./front
             dockerfile: dockerfile
         ports: 
             - "80:80"
