@@ -22,21 +22,20 @@ services:
             - ./front/:/usr/src/app
         stdin_open: true
         restart: always
+
+      db:
+          image: mariadb:10
+          ports:
+            - 3306:3306
+            environment:
+              MYSQL_ROOT_PASSWORD: chltjdgus123!
+              MYSQL_DATABASE: myblog
+              MYSQL_USER: cshcmi
+              MYSQL_PASSWORD: chltjdgsu123!
+          volumes:
+            - ./db/mariadb/data:/var/lib/mysql
+            - ./db/mariadb/config:/etc/mysql/conf.d
+          environment:
+            TZ: Asia/Seoul
+          restart: always
     
-    db:
-        image: mysql/mysql-server:8.0.25-1.2.3-server
-        restart: always
-        command: --lower_case_table_names=1
-        container_name: mysql-test
-        ports:
-          - "3306:3306"
-        environment:
-          - MYSQL_DATABASE=reactgo
-          - MYSQL_ROOT_PASSWORD=chltjdgus123!
-          - TZ=Asia/Seoul
-    
-        command:
-          - --character-set-server=utf8mb4
-          - --collation-server=utf8mb4_unicode_ci
-        volumes:
-          - ./mysql:/var/lib/mysql
