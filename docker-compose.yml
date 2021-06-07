@@ -18,7 +18,7 @@ services:
         - /app/node_modules
         - ./:/app
       ports:
-        - "80:3000"
+        - 80:80
       stdin_open: true
     db:
         image: mariadb:10
