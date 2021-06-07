@@ -10,7 +10,6 @@ services:
         restart: always
         expose: 
             - 8000
-    
     front:
         build:  
             context: ./front/
@@ -22,20 +21,18 @@ services:
             - ./front/:/usr/src/app
         stdin_open: true
         restart: always
-
-      db:
-          image: mariadb:10
-          ports:
-            - 3306:3306
-            environment:
-              MYSQL_ROOT_PASSWORD: chltjdgus123!
-              MYSQL_DATABASE: myblog
-              MYSQL_USER: cshcmi
-              MYSQL_PASSWORD: chltjdgsu123!
-          volumes:
-            - ./db/mariadb/data:/var/lib/mysql
-            - ./db/mariadb/config:/etc/mysql/conf.d
+    db:
+        image: mariadb:10
+        ports:
+          - 3306:3306
           environment:
-            TZ: Asia/Seoul
-          restart: always
-    
+          - MYSQL_ROOT_PASSWORD: chltjdgus123!
+          - MYSQL_DATABASE: myblog
+          - MYSQL_USER: cshcmi
+          - MYSQL_PASSWORD: chltjdgsu123!
+        volumes:
+          - ./db/mariadb/data:/var/lib/mysql
+          - ./db/mariadb/config:/etc/mysql/conf.d
+        environment:
+          TZ: Asia/Seoul
+        restart: always
