@@ -6,12 +6,10 @@ services:
             context: ./backend/
             dockerfile: dockerfile
         ports: 
-            - "8080:8080"
+            - "8000:8000"
         restart: unless-stopped
         expose: 
-            - 8080
-        networks: 
-            - backend
+            - 8000
     
     front:
         build:  
