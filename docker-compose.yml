@@ -3,26 +3,23 @@ version: "3"
 services: 
     backend:
         build: 
-            context: ./backend/
+            context: ./backend
             dockerfile: dockerfile
         ports: 
             - "8000:8000"
         restart: always
         expose: 
             - 8000
-    front:
-        build:  
-            context: ./front
-            dockerfile: dockerfile
-        ports: 
-            - "80:80"
-        expose: 
-          - 80
-        volumes: 
-          - "./front:/app"
-          - "/app/node_modules"
-        stdin_open: true
-        restart: always
+    frontend:
+      build:
+        dockerfile: Dockerfile 
+        context: ./front
+      volumes:
+        - /app/node_modules
+        - ./:/app
+      ports:
+        - "80:3000"
+      stdin_open: true
     db:
         image: mariadb:10
         ports:
