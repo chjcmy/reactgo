@@ -1,20 +1,10 @@
-FROM node:latest as builder
+FROM node:12.2.0-alpine
 
-RUN mkdir /usr/src/app
-WORKDIR /usr/src/app
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
-COPY package.json /usr/src/app/package.json
-RUN npm install
+WORKDIR /app
 
-COPY . /usr/src/app
-RUN npm run build
+ENV PATH /app/node_modules/.bin:$PATH
 
-FROM nginx:latest
+COPY package.json /app/package.json
+RUN npm install 
 
-RUN rm -rf /etc/nginx/conf.d
-COPY default.conf /etc/nginx
-
-COPY --from=builder /usr/src/app/build /usr/share/nginx/html
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
