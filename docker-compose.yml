@@ -31,8 +31,8 @@ services:
           - MYSQL_USER: cshcmi
           - MYSQL_PASSWORD: chltjdgsu123!
         volumes:
-          - ./db/mariadb/data:/var/lib/mysql
-          - ./db/mariadb/config:/etc/mysql/conf.d
+          - ./db/data:/var/lib/mysql
+          - ./db/config:/etc/mysql/conf.d
         environment:
           TZ: Asia/Seoul
         restart: always
