@@ -24,7 +24,7 @@ services:
         restart: always
     
     db:
-        image: mysql:8
+        image: mysql/mysql-server:8.0.25-1.2.3-server
         restart: always
         command: --lower_case_table_names=1
         container_name: mysql-test
