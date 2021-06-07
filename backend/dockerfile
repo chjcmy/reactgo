@@ -1,6 +1,6 @@
 FROM golang:latest
 
-RUN apt update && apt upgrade && \
+RUN apt update && apt upgrade -y && \
     apt add --no-cache bash git openssh
 
 WORKDIR /app
