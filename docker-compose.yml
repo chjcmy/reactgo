@@ -32,7 +32,7 @@ services:
           - "3306:3306"
         environment:
           - MYSQL_DATABASE=reactgo
-          - MYSQL_ROOT_PASSWORD=password넣음
+          - MYSQL_ROOT_PASSWORD=chltjdgus123!
           - TZ=Asia/Seoul
     
         command:
