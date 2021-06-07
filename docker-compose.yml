@@ -16,6 +16,11 @@ services:
             dockerfile: dockerfile
         ports: 
             - "80:80"
+        expose: 
+          - 80
+        volumes: 
+          - "./front:/app"
+          - "/app/node_modules"
         stdin_open: true
         restart: always
     db:
