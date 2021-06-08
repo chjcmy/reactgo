@@ -7,14 +7,12 @@ on:
   pull_request:
     branches: [ main ]
 
-  workflow_dispatch:
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - name: docker-compose
         run: |
-          docker-compose up -d
+          sudo docker-compose up -d
        
