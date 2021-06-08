@@ -13,10 +13,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
       - uses: actions/checkout@v2
-
-      - name: Run docker-compose
+      - name: docker build golang
         run: |
-          docker-compose up
-
+          docker build ./backend --tag gin
+      - name: docker build react
+        run: |
+          docker build ./front --tag react
+       
