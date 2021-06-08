@@ -20,14 +20,4 @@ services:
       ports:
         - 80:80
       stdin_open: true
-    db:
-        image: mariadb:10
-        ports:
-          - 1994:3306
-        env_file: .env
-        environment:
-          TZ: Asia/Seoul
-        volumes:
-          - ./db/data:/var/lib/mysql
-          - ./db/config:/etc/mysql/conf.d
-        restart: always
+
