@@ -14,10 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: docker build golang
+      - name: docker-compose
         run: |
-          docker build ./backend --tag gin
-      - name: docker build react
-        run: |
-          docker build ./front --tag react
+          docker-compose up
        
