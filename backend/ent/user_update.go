@@ -6,11 +6,11 @@ import (
 	"context"
 	"fmt"
 
-	"choi1994.com/m/ent/predicate"
-	"choi1994.com/m/ent/user"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/predicate"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/user"
 )
 
 // UserUpdate is the builder for updating User entities.

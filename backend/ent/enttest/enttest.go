@@ -5,9 +5,9 @@ package enttest
 import (
 	"context"
 
-	"choi1994.com/m/ent"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent"
 	// required by schema hooks.
-	_ "choi1994.com/m/ent/runtime"
+	_ "github.com/chjcmy/reactgo/tree/main/backend/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

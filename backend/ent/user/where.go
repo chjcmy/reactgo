@@ -3,8 +3,8 @@
 package user
 
 import (
-	"choi1994.com/m/ent/predicate"
 	"entgo.io/ent/dialect/sql"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

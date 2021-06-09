@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"choi1994.com/m/ent"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent"
 )
 
 // The UserFunc type is an adapter to allow the use of ordinary

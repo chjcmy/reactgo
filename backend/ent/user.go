@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"choi1994.com/m/ent/user"
 	"entgo.io/ent/dialect/sql"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/user"
 )
 
 // User is the model entity for the User schema.

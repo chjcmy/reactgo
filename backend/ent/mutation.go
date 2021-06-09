@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"sync"
 
-	"choi1994.com/m/ent/predicate"
-	"choi1994.com/m/ent/user"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/predicate"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/user"
 
 	"entgo.io/ent"
 )
