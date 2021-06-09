@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"choi1994.com/m/ent/migrate"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/migrate"
 
-	"choi1994.com/m/ent/user"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/user"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"

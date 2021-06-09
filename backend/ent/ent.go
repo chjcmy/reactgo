@@ -6,11 +6,11 @@ import (
 	"errors"
 	"fmt"
 
-	"choi1994.com/m/ent/user"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/user"
 )
 
 // ent aliases to avoid import conflicts in user's code.

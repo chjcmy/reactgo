@@ -7,9 +7,9 @@ import (
 	"errors"
 	"fmt"
 
-	"choi1994.com/m/ent/user"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/user"
 )
 
 // UserCreate is the builder for creating a User entity.

@@ -3,8 +3,8 @@
 package ent
 
 import (
-	"choi1994.com/m/ent/schema"
-	"choi1994.com/m/ent/user"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/schema"
+	"github.com/chjcmy/reactgo/tree/main/backend/ent/user"
 )
 
 // The init function reads all schema descriptors with runtime code
