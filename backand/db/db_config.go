@@ -1,9 +1,16 @@
 package db
 
 import (
-"gorm.io/driver/mysql"
-"gorm.io/gorm"
+	"gorm.io/datatypes"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
+
+type UserWithJSON struct {
+	gorm.Model
+	Name       string
+	Attributes datatypes.JSON
+}
 
 func Connect() *gorm.DB {
 	dsn := "cshcmi:chltjdgus123!@tcp(choi1994.iptime.org:1994)/blog?charset=utf8mb4&parseTime=True&loc=Local"
