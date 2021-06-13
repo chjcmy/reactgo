@@ -20,15 +20,10 @@ func main() {
 	//	Manager: 0,
 	//})
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
 
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
 	api := r.Group("/api")
 	{
-		api.POST("/userinfo", api3.Userinfo)
+		api.GET("/userinfo", api3.Userinfo)
 	}
 	r.Run("0.0.0.0:8000")
 }
