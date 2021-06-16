@@ -7,9 +7,8 @@ import (
 )
 
 func Userinfo(c *gin.Context) {
-
 	var user db3.User
-		db := db3.Connect()
-		db.Take(&user)
+	db := db3.Connect()
+	db.Take(&user)
 	c.JSON(http.StatusOK, user)
 }
