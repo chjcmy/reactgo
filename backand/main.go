@@ -35,6 +35,10 @@ func main() {
 		subjects := api.Group("/book")
 		subjects.GET("/:id", api3.ShowBook)
 		subjects.GET("/books", api3.ShowTitles)
+		subjects.GET("/books/:id", api3.SubjectTitles)
+		subjects.POST("/create", api3.CreateBook)
+		subjects.POST("/update", api3.UpdateBook)
+		subjects.DELETE("/delete/:id", api3.DeleteBook)
 	}
 
 	api.Use()
