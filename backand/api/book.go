@@ -100,8 +100,14 @@ func SubjectTitles(c *gin.Context) {
 func CreateBook(c *gin.Context) {
 	var result InsertValue
 	var named BookId
-	c.ShouldBind(&result)
-	c.ShouldBindHeader(&result)
+	err := c.ShouldBind(&result)
+	if err != nil {
+		return
+	}
+	err2 := c.ShouldBindHeader(&result)
+	if err2 != nil {
+		return
+	}
 	db := db3.Connect()
 	db.Table("users").
 		Select("users.id").
@@ -124,7 +130,10 @@ func CreateBook(c *gin.Context) {
 
 func UpdateBook(c *gin.Context) {
 	var result UpdateValue
-	c.ShouldBind(&result)
+	err := c.ShouldBind(&result)
+	if err != nil {
+		return
+	}
 	db := db3.Connect()
 	value := db3.Book{
 		Model:   gorm.Model{},
