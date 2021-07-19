@@ -1,51 +1,35 @@
 package main
 
 import (
-	api3 "backand/api"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"math/rand"
+	"net/http"
+	"time"
 )
 
 func main() {
-	//db := db3.Connect()
-	//
-	//db.AutoMigrate(&db3.User{}, &db3.Book{}, &db3.BookSubject{})
+	e := echo.New()
 
-	//db.Create(&db3.Book{
-	//	Model:       gorm.Model{},
-	//	Title:       "math",
-	//	Content:     "mula",
-	//	BookName:    1,
-	//	User:        db3.User{},
-	//	BookCode:    3,
-	//	BookSubject: db3.BookSubject{},
-	//})
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-	r := gin.Default()
+	e.GET("/", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, "hellow World")
+	})
 
-	api := r.Group("/api")
+	e.GET("/jsonp", func(c echo.Context) error {
+		callback := c.QueryParam("callback")
+		var content struct {
+			Response  string    `json:"response"`
+			Timestamp time.Time `json:"timestamp"`
+			Random    int       `json:"random"`
+		}
+		content.Response = "Sent via JSONP"
+		content.Timestamp = time.Now().UTC()
+		content.Random = rand.Intn(1000) //nolint:gosec
+		return c.JSONP(http.StatusOK, callback, &content)
+	})
 
-	api.Use()
-	{
-		user := api.Group("/user")
-		user.GET("/userinfo", api3.Userinfo)
-	}
-
-	api.Use()
-	{
-		subjects := api.Group("/book")
-		subjects.GET("/:id", api3.ShowBook)
-		subjects.GET("/books", api3.ShowTitles)
-		subjects.GET("/books/:id", api3.SubjectTitles)
-		subjects.POST("/create", api3.CreateBook)
-		subjects.POST("/update", api3.UpdateBook)
-		subjects.DELETE("/delete/:id", api3.DeleteBook)
-	}
-
-	api.Use()
-	{
-		subjects := api.Group("/subjects")
-		subjects.GET("/subject", api3.ShowSubject)
-	}
-
-	r.Run("0.0.0.0:8000")
+	e.Logger.Fatal(e.Start(":8000"))
 }
