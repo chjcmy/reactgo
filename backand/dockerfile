@@ -7,7 +7,7 @@ WORKDIR /app
 
 RUN mkdir -p /app/github.com
 
-COPY go.mod go.sum ./
+COPY go.mod go.sum ./github.com/
 
 RUN go mod download
 
