@@ -13,6 +13,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/backand/ent/book"
 	"github.com/backand/ent/predicate"
+	"github.com/backand/ent/unit"
+	"github.com/backand/ent/user"
 )
 
 // BookQuery is the builder for querying Book entities.
@@ -24,6 +26,9 @@ type BookQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.Book
+	// eager-loading edges.
+	withUnitid *UnitQuery
+	withUserid *UserQuery
 	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -59,6 +64,50 @@ func (bq *BookQuery) Unique(unique bool) *BookQuery {
 func (bq *BookQuery) Order(o ...OrderFunc) *BookQuery {
 	bq.order = append(bq.order, o...)
 	return bq
+}
+
+// QueryUnitid chains the current query on the "unitid" edge.
+func (bq *BookQuery) QueryUnitid() *UnitQuery {
+	query := &UnitQuery{config: bq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := bq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := bq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(book.Table, book.FieldID, selector),
+			sqlgraph.To(unit.Table, unit.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, book.UnitidTable, book.UnitidColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(bq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryUserid chains the current query on the "userid" edge.
+func (bq *BookQuery) QueryUserid() *UserQuery {
+	query := &UserQuery{config: bq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := bq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := bq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(book.Table, book.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, book.UseridTable, book.UseridColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(bq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Book entity from the query.
@@ -242,10 +291,34 @@ func (bq *BookQuery) Clone() *BookQuery {
 		offset:     bq.offset,
 		order:      append([]OrderFunc{}, bq.order...),
 		predicates: append([]predicate.Book{}, bq.predicates...),
+		withUnitid: bq.withUnitid.Clone(),
+		withUserid: bq.withUserid.Clone(),
 		// clone intermediate query.
 		sql:  bq.sql.Clone(),
 		path: bq.path,
 	}
+}
+
+// WithUnitid tells the query-builder to eager-load the nodes that are connected to
+// the "unitid" edge. The optional arguments are used to configure the query builder of the edge.
+func (bq *BookQuery) WithUnitid(opts ...func(*UnitQuery)) *BookQuery {
+	query := &UnitQuery{config: bq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	bq.withUnitid = query
+	return bq
+}
+
+// WithUserid tells the query-builder to eager-load the nodes that are connected to
+// the "userid" edge. The optional arguments are used to configure the query builder of the edge.
+func (bq *BookQuery) WithUserid(opts ...func(*UserQuery)) *BookQuery {
+	query := &UserQuery{config: bq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	bq.withUserid = query
+	return bq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -311,10 +384,17 @@ func (bq *BookQuery) prepareQuery(ctx context.Context) error {
 
 func (bq *BookQuery) sqlAll(ctx context.Context) ([]*Book, error) {
 	var (
-		nodes   = []*Book{}
-		withFKs = bq.withFKs
-		_spec   = bq.querySpec()
+		nodes       = []*Book{}
+		withFKs     = bq.withFKs
+		_spec       = bq.querySpec()
+		loadedTypes = [2]bool{
+			bq.withUnitid != nil,
+			bq.withUserid != nil,
+		}
 	)
+	if bq.withUnitid != nil || bq.withUserid != nil {
+		withFKs = true
+	}
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, book.ForeignKeys...)
 	}
@@ -328,6 +408,7 @@ func (bq *BookQuery) sqlAll(ctx context.Context) ([]*Book, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	if err := sqlgraph.QueryNodes(ctx, bq.driver, _spec); err != nil {
@@ -336,6 +417,65 @@ func (bq *BookQuery) sqlAll(ctx context.Context) ([]*Book, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := bq.withUnitid; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Book)
+		for i := range nodes {
+			if nodes[i].unit_contents == nil {
+				continue
+			}
+			fk := *nodes[i].unit_contents
+			if _, ok := nodeids[fk]; !ok {
+				ids = append(ids, fk)
+			}
+			nodeids[fk] = append(nodeids[fk], nodes[i])
+		}
+		query.Where(unit.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "unit_contents" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Unitid = n
+			}
+		}
+	}
+
+	if query := bq.withUserid; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Book)
+		for i := range nodes {
+			if nodes[i].user_writer == nil {
+				continue
+			}
+			fk := *nodes[i].user_writer
+			if _, ok := nodeids[fk]; !ok {
+				ids = append(ids, fk)
+			}
+			nodeids[fk] = append(nodeids[fk], nodes[i])
+		}
+		query.Where(user.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "user_writer" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Userid = n
+			}
+		}
+	}
+
 	return nodes, nil
 }
 

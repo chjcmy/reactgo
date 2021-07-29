@@ -884,7 +884,7 @@ func GitlabContainsFold(v string) predicate.User {
 	})
 }
 
-// HasWriter applies the HasEdge predicate on the "Writer" edge.
+// HasWriter applies the HasEdge predicate on the "writer" edge.
 func HasWriter() predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
@@ -896,7 +896,7 @@ func HasWriter() predicate.User {
 	})
 }
 
-// HasWriterWith applies the HasEdge predicate on the "Writer" edge with a given conditions (other predicates).
+// HasWriterWith applies the HasEdge predicate on the "writer" edge with a given conditions (other predicates).
 func HasWriterWith(preds ...predicate.Book) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(

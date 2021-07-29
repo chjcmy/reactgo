@@ -9,6 +9,8 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/backand/ent/book"
+	"github.com/backand/ent/unit"
+	"github.com/backand/ent/user"
 )
 
 // Book is the model entity for the Book schema.
@@ -23,9 +25,51 @@ type Book struct {
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Subject holds the value of the "subject" field.
-	Subject       string `json:"subject,omitempty"`
+	Subject string `json:"subject,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the BookQuery when eager-loading is set.
+	Edges         BookEdges `json:"edges"`
 	unit_contents *int
 	user_writer   *int
+}
+
+// BookEdges holds the relations/edges for other nodes in the graph.
+type BookEdges struct {
+	// Unitid holds the value of the unitid edge.
+	Unitid *Unit `json:"unitid,omitempty"`
+	// Userid holds the value of the userid edge.
+	Userid *User `json:"userid,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// UnitidOrErr returns the Unitid value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e BookEdges) UnitidOrErr() (*Unit, error) {
+	if e.loadedTypes[0] {
+		if e.Unitid == nil {
+			// The edge unitid was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: unit.Label}
+		}
+		return e.Unitid, nil
+	}
+	return nil, &NotLoadedError{edge: "unitid"}
+}
+
+// UseridOrErr returns the Userid value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e BookEdges) UseridOrErr() (*User, error) {
+	if e.loadedTypes[1] {
+		if e.Userid == nil {
+			// The edge userid was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: user.Label}
+		}
+		return e.Userid, nil
+	}
+	return nil, &NotLoadedError{edge: "userid"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -105,6 +149,16 @@ func (b *Book) assignValues(columns []string, values []interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QueryUnitid queries the "unitid" edge of the Book entity.
+func (b *Book) QueryUnitid() *UnitQuery {
+	return (&BookClient{config: b.config}).QueryUnitid(b)
+}
+
+// QueryUserid queries the "userid" edge of the Book entity.
+func (b *Book) QueryUserid() *UserQuery {
+	return (&BookClient{config: b.config}).QueryUserid(b)
 }
 
 // Update returns a builder for updating this Book.

@@ -11,6 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/backand/ent/book"
+	"github.com/backand/ent/unit"
+	"github.com/backand/ent/user"
 )
 
 // BookCreate is the builder for creating a Book entity.
@@ -74,6 +76,44 @@ func (bc *BookCreate) SetNillableSubject(s *string) *BookCreate {
 		bc.SetSubject(*s)
 	}
 	return bc
+}
+
+// SetUnitidID sets the "unitid" edge to the Unit entity by ID.
+func (bc *BookCreate) SetUnitidID(id int) *BookCreate {
+	bc.mutation.SetUnitidID(id)
+	return bc
+}
+
+// SetNillableUnitidID sets the "unitid" edge to the Unit entity by ID if the given value is not nil.
+func (bc *BookCreate) SetNillableUnitidID(id *int) *BookCreate {
+	if id != nil {
+		bc = bc.SetUnitidID(*id)
+	}
+	return bc
+}
+
+// SetUnitid sets the "unitid" edge to the Unit entity.
+func (bc *BookCreate) SetUnitid(u *Unit) *BookCreate {
+	return bc.SetUnitidID(u.ID)
+}
+
+// SetUseridID sets the "userid" edge to the User entity by ID.
+func (bc *BookCreate) SetUseridID(id int) *BookCreate {
+	bc.mutation.SetUseridID(id)
+	return bc
+}
+
+// SetNillableUseridID sets the "userid" edge to the User entity by ID if the given value is not nil.
+func (bc *BookCreate) SetNillableUseridID(id *int) *BookCreate {
+	if id != nil {
+		bc = bc.SetUseridID(*id)
+	}
+	return bc
+}
+
+// SetUserid sets the "userid" edge to the User entity.
+func (bc *BookCreate) SetUserid(u *User) *BookCreate {
+	return bc.SetUseridID(u.ID)
 }
 
 // Mutation returns the BookMutation object of the builder.
@@ -218,6 +258,46 @@ func (bc *BookCreate) createSpec() (*Book, *sqlgraph.CreateSpec) {
 			Column: book.FieldSubject,
 		})
 		_node.Subject = value
+	}
+	if nodes := bc.mutation.UnitidIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UnitidTable,
+			Columns: []string{book.UnitidColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: unit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.unit_contents = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := bc.mutation.UseridIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UseridTable,
+			Columns: []string{book.UseridColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.user_writer = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

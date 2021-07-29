@@ -37,8 +37,8 @@ type User struct {
 
 // UserEdges holds the relations/edges for other nodes in the graph.
 type UserEdges struct {
-	// Writer holds the value of the Writer edge.
-	Writer []*Book `json:"Writer,omitempty"`
+	// Writer holds the value of the writer edge.
+	Writer []*Book `json:"writer,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
@@ -50,7 +50,7 @@ func (e UserEdges) WriterOrErr() ([]*Book, error) {
 	if e.loadedTypes[0] {
 		return e.Writer, nil
 	}
-	return nil, &NotLoadedError{edge: "Writer"}
+	return nil, &NotLoadedError{edge: "writer"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -132,7 +132,7 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 	return nil
 }
 
-// QueryWriter queries the "Writer" edge of the User entity.
+// QueryWriter queries the "writer" edge of the User entity.
 func (u *User) QueryWriter() *BookQuery {
 	return (&UserClient{config: u.config}).QueryWriter(u)
 }

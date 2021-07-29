@@ -51,6 +51,10 @@ func init() {
 	userDescPassword := userFields[1].Descriptor()
 	// user.DefaultPassword holds the default value on creation for the password field.
 	user.DefaultPassword = userDescPassword.Default.(string)
+	// userDescAge is the schema descriptor for age field.
+	userDescAge := userFields[2].Descriptor()
+	// user.DefaultAge holds the default value on creation for the age field.
+	user.DefaultAge = userDescAge.Default.(func() time.Time)
 	// userDescHobby is the schema descriptor for hobby field.
 	userDescHobby := userFields[3].Descriptor()
 	// user.DefaultHobby holds the default value on creation for the hobby field.

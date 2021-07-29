@@ -2,6 +2,10 @@
 
 package user
 
+import (
+	"time"
+)
+
 const (
 	// Label holds the string label denoting the user type in the database.
 	Label = "user"
@@ -22,15 +26,15 @@ const (
 	// FieldGitlab holds the string denoting the gitlab field in the database.
 	FieldGitlab = "gitlab"
 	// EdgeWriter holds the string denoting the writer edge name in mutations.
-	EdgeWriter = "Writer"
+	EdgeWriter = "writer"
 	// Table holds the table name of the user in the database.
 	Table = "users"
-	// WriterTable is the table the holds the Writer relation/edge.
+	// WriterTable is the table the holds the writer relation/edge.
 	WriterTable = "books"
 	// WriterInverseTable is the table name for the Book entity.
 	// It exists in this package in order to avoid circular dependency with the "book" package.
 	WriterInverseTable = "books"
-	// WriterColumn is the table column denoting the Writer relation/edge.
+	// WriterColumn is the table column denoting the writer relation/edge.
 	WriterColumn = "user_writer"
 )
 
@@ -59,6 +63,8 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultPassword holds the default value on creation for the "password" field.
 	DefaultPassword string
+	// DefaultAge holds the default value on creation for the "age" field.
+	DefaultAge func() time.Time
 	// DefaultHobby holds the default value on creation for the "hobby" field.
 	DefaultHobby string
 	// DefaultLang holds the default value on creation for the "lang" field.

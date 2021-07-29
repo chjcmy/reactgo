@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+	bookapi "github.com/backand/api"
+	unitapi "github.com/backand/api"
 	userapi "github.com/backand/api"
 	"github.com/backand/db"
 	"github.com/backand/ent"
@@ -10,7 +11,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"log"
-	"math/rand"
 	"net/http"
 	"time"
 )
@@ -42,37 +42,10 @@ func createUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, u)
 }
 
-func BirthDay(c echo.Context) error {
-	births := &birth{}
-	c.Bind(births)
-	log.Println("user was created: ", births)
-
-	year := diff(births.Birthdays, time.Now())
-
-	fmt.Printf("You are %d years old.",
-		year)
-	return c.JSON(http.StatusOK, year)
-}
-
-func diff(a, b time.Time) (year int) {
-	if a.Location() != b.Location() {
-		b = b.In(a.Location())
-	}
-	if a.After(b) {
-		a, b = b, a
-	}
-	y1, _, _ := a.Date()
-	y2, _, _ := b.Date()
-
-	year = int(y2 - y1) //nolint:unconvert
-
-	return
-}
-
 func main() {
 	e := echo.New()
 
-	client, err := ent.Open("mysql", "cshcmi:chltjdgus123!@tcp(choi1994.iptime.org:1994)/blog?charset=utf8mb4&parseTime=True&loc=Local")
+	client, err := ent.Open("mysql", "cshcmi:chltjdgus123!@tcp(choi1994.iptime.org:1994)/blog?charset=utf8mb4&parseTime=True")
 	if err != nil {
 		log.Fatalf("failed opening connection to sqlite: %v", err)
 	}
@@ -84,22 +57,15 @@ func main() {
 	e.Use(middleware.Recover())
 
 	e.POST("/users", createUser)
-	e.POST("/Birthday", BirthDay)
 	e.POST("/remake", userapi.Remake)
-	e.GET("/hostinfo", userapi.Hostinfo)
-
-	e.GET("/jsonp", func(c echo.Context) error {
-		callback := c.QueryParam("callback")
-		var content struct {
-			Response  string    `json:"response"`
-			Timestamp time.Time `json:"timestamp"`
-			Random    int       `json:"random"`
-		}
-		content.Response = "Sent via JSONP"
-		content.Timestamp = time.Now().UTC()
-		content.Random = rand.Intn(1000) //nolint:gosec
-		return c.JSONP(http.StatusOK, callback, &content)
-	})
+	e.GET("/hosting", userapi.Hosting)
+	e.POST("/unittest", unitapi.UnitCreate)
+	e.GET("/unitshosting", unitapi.UnitHosting)
+	e.POST("/bookcreate", bookapi.BookCreate)
+	e.GET("/bookread/:id", bookapi.BookRead)
+	e.GET("/bookshow/:num", bookapi.BookShow)
+	e.DELETE("/bookdelete/:id", bookapi.BookDelete)
+	e.PUT("/bookupdate/:id", bookapi.BookUpdate)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

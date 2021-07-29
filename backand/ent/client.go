@@ -221,6 +221,38 @@ func (c *BookClient) GetX(ctx context.Context, id int) *Book {
 	return obj
 }
 
+// QueryUnitid queries the unitid edge of a Book.
+func (c *BookClient) QueryUnitid(b *Book) *UnitQuery {
+	query := &UnitQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(book.Table, book.FieldID, id),
+			sqlgraph.To(unit.Table, unit.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, book.UnitidTable, book.UnitidColumn),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryUserid queries the userid edge of a Book.
+func (c *BookClient) QueryUserid(b *Book) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(book.Table, book.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, book.UseridTable, book.UseridColumn),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *BookClient) Hooks() []Hook {
 	return c.hooks.Book
@@ -417,7 +449,7 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 	return obj
 }
 
-// QueryWriter queries the Writer edge of a User.
+// QueryWriter queries the writer edge of a User.
 func (c *UserClient) QueryWriter(u *User) *BookQuery {
 	query := &BookQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {

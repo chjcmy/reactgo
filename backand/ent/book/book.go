@@ -19,8 +19,26 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldSubject holds the string denoting the subject field in the database.
 	FieldSubject = "subject"
+	// EdgeUnitid holds the string denoting the unitid edge name in mutations.
+	EdgeUnitid = "unitid"
+	// EdgeUserid holds the string denoting the userid edge name in mutations.
+	EdgeUserid = "userid"
 	// Table holds the table name of the book in the database.
 	Table = "books"
+	// UnitidTable is the table the holds the unitid relation/edge.
+	UnitidTable = "books"
+	// UnitidInverseTable is the table name for the Unit entity.
+	// It exists in this package in order to avoid circular dependency with the "unit" package.
+	UnitidInverseTable = "units"
+	// UnitidColumn is the table column denoting the unitid relation/edge.
+	UnitidColumn = "unit_contents"
+	// UseridTable is the table the holds the userid relation/edge.
+	UseridTable = "books"
+	// UseridInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UseridInverseTable = "users"
+	// UseridColumn is the table column denoting the userid relation/edge.
+	UseridColumn = "user_writer"
 )
 
 // Columns holds all SQL columns for book fields.

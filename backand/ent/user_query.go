@@ -64,7 +64,7 @@ func (uq *UserQuery) Order(o ...OrderFunc) *UserQuery {
 	return uq
 }
 
-// QueryWriter chains the current query on the "Writer" edge.
+// QueryWriter chains the current query on the "writer" edge.
 func (uq *UserQuery) QueryWriter() *BookQuery {
 	query := &BookQuery{config: uq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
@@ -275,7 +275,7 @@ func (uq *UserQuery) Clone() *UserQuery {
 }
 
 // WithWriter tells the query-builder to eager-load the nodes that are connected to
-// the "Writer" edge. The optional arguments are used to configure the query builder of the edge.
+// the "writer" edge. The optional arguments are used to configure the query builder of the edge.
 func (uq *UserQuery) WithWriter(opts ...func(*BookQuery)) *UserQuery {
 	query := &BookQuery{config: uq.config}
 	for _, opt := range opts {

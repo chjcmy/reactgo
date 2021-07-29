@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/backand/ent/predicate"
 )
 
@@ -491,6 +492,62 @@ func SubjectEqualFold(v string) predicate.Book {
 func SubjectContainsFold(v string) predicate.Book {
 	return predicate.Book(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldSubject), v))
+	})
+}
+
+// HasUnitid applies the HasEdge predicate on the "unitid" edge.
+func HasUnitid() predicate.Book {
+	return predicate.Book(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(UnitidTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UnitidTable, UnitidColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUnitidWith applies the HasEdge predicate on the "unitid" edge with a given conditions (other predicates).
+func HasUnitidWith(preds ...predicate.Unit) predicate.Book {
+	return predicate.Book(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(UnitidInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UnitidTable, UnitidColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasUserid applies the HasEdge predicate on the "userid" edge.
+func HasUserid() predicate.Book {
+	return predicate.Book(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(UseridTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UseridTable, UseridColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUseridWith applies the HasEdge predicate on the "userid" edge with a given conditions (other predicates).
+func HasUseridWith(preds ...predicate.User) predicate.Book {
+	return predicate.Book(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(UseridInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UseridTable, UseridColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

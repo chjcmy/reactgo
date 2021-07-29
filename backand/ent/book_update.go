@@ -12,6 +12,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/backand/ent/book"
 	"github.com/backand/ent/predicate"
+	"github.com/backand/ent/unit"
+	"github.com/backand/ent/user"
 )
 
 // BookUpdate is the builder for updating Book entities.
@@ -75,9 +77,59 @@ func (bu *BookUpdate) SetNillableSubject(s *string) *BookUpdate {
 	return bu
 }
 
+// SetUnitidID sets the "unitid" edge to the Unit entity by ID.
+func (bu *BookUpdate) SetUnitidID(id int) *BookUpdate {
+	bu.mutation.SetUnitidID(id)
+	return bu
+}
+
+// SetNillableUnitidID sets the "unitid" edge to the Unit entity by ID if the given value is not nil.
+func (bu *BookUpdate) SetNillableUnitidID(id *int) *BookUpdate {
+	if id != nil {
+		bu = bu.SetUnitidID(*id)
+	}
+	return bu
+}
+
+// SetUnitid sets the "unitid" edge to the Unit entity.
+func (bu *BookUpdate) SetUnitid(u *Unit) *BookUpdate {
+	return bu.SetUnitidID(u.ID)
+}
+
+// SetUseridID sets the "userid" edge to the User entity by ID.
+func (bu *BookUpdate) SetUseridID(id int) *BookUpdate {
+	bu.mutation.SetUseridID(id)
+	return bu
+}
+
+// SetNillableUseridID sets the "userid" edge to the User entity by ID if the given value is not nil.
+func (bu *BookUpdate) SetNillableUseridID(id *int) *BookUpdate {
+	if id != nil {
+		bu = bu.SetUseridID(*id)
+	}
+	return bu
+}
+
+// SetUserid sets the "userid" edge to the User entity.
+func (bu *BookUpdate) SetUserid(u *User) *BookUpdate {
+	return bu.SetUseridID(u.ID)
+}
+
 // Mutation returns the BookMutation object of the builder.
 func (bu *BookUpdate) Mutation() *BookMutation {
 	return bu.mutation
+}
+
+// ClearUnitid clears the "unitid" edge to the Unit entity.
+func (bu *BookUpdate) ClearUnitid() *BookUpdate {
+	bu.mutation.ClearUnitid()
+	return bu
+}
+
+// ClearUserid clears the "userid" edge to the User entity.
+func (bu *BookUpdate) ClearUserid() *BookUpdate {
+	bu.mutation.ClearUserid()
+	return bu
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -186,6 +238,76 @@ func (bu *BookUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: book.FieldSubject,
 		})
 	}
+	if bu.mutation.UnitidCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UnitidTable,
+			Columns: []string{book.UnitidColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: unit.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := bu.mutation.UnitidIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UnitidTable,
+			Columns: []string{book.UnitidColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: unit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if bu.mutation.UseridCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UseridTable,
+			Columns: []string{book.UseridColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := bu.mutation.UseridIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UseridTable,
+			Columns: []string{book.UseridColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{book.Label}
@@ -253,9 +375,59 @@ func (buo *BookUpdateOne) SetNillableSubject(s *string) *BookUpdateOne {
 	return buo
 }
 
+// SetUnitidID sets the "unitid" edge to the Unit entity by ID.
+func (buo *BookUpdateOne) SetUnitidID(id int) *BookUpdateOne {
+	buo.mutation.SetUnitidID(id)
+	return buo
+}
+
+// SetNillableUnitidID sets the "unitid" edge to the Unit entity by ID if the given value is not nil.
+func (buo *BookUpdateOne) SetNillableUnitidID(id *int) *BookUpdateOne {
+	if id != nil {
+		buo = buo.SetUnitidID(*id)
+	}
+	return buo
+}
+
+// SetUnitid sets the "unitid" edge to the Unit entity.
+func (buo *BookUpdateOne) SetUnitid(u *Unit) *BookUpdateOne {
+	return buo.SetUnitidID(u.ID)
+}
+
+// SetUseridID sets the "userid" edge to the User entity by ID.
+func (buo *BookUpdateOne) SetUseridID(id int) *BookUpdateOne {
+	buo.mutation.SetUseridID(id)
+	return buo
+}
+
+// SetNillableUseridID sets the "userid" edge to the User entity by ID if the given value is not nil.
+func (buo *BookUpdateOne) SetNillableUseridID(id *int) *BookUpdateOne {
+	if id != nil {
+		buo = buo.SetUseridID(*id)
+	}
+	return buo
+}
+
+// SetUserid sets the "userid" edge to the User entity.
+func (buo *BookUpdateOne) SetUserid(u *User) *BookUpdateOne {
+	return buo.SetUseridID(u.ID)
+}
+
 // Mutation returns the BookMutation object of the builder.
 func (buo *BookUpdateOne) Mutation() *BookMutation {
 	return buo.mutation
+}
+
+// ClearUnitid clears the "unitid" edge to the Unit entity.
+func (buo *BookUpdateOne) ClearUnitid() *BookUpdateOne {
+	buo.mutation.ClearUnitid()
+	return buo
+}
+
+// ClearUserid clears the "userid" edge to the User entity.
+func (buo *BookUpdateOne) ClearUserid() *BookUpdateOne {
+	buo.mutation.ClearUserid()
+	return buo
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -387,6 +559,76 @@ func (buo *BookUpdateOne) sqlSave(ctx context.Context) (_node *Book, err error) 
 			Value:  value,
 			Column: book.FieldSubject,
 		})
+	}
+	if buo.mutation.UnitidCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UnitidTable,
+			Columns: []string{book.UnitidColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: unit.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := buo.mutation.UnitidIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UnitidTable,
+			Columns: []string{book.UnitidColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: unit.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if buo.mutation.UseridCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UseridTable,
+			Columns: []string{book.UseridColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := buo.mutation.UseridIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   book.UseridTable,
+			Columns: []string{book.UseridColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Book{config: buo.config}
 	_spec.Assign = _node.assignValues

@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -19,15 +20,6 @@ type (
 		Lang     string    `json:"lang"`
 		Gitlab   string    `json:"gitlab"`
 		Github   string    `json:"github"`
-	}
-
-	host []struct {
-		Name   string    `json:"name"`
-		Age    time.Time `json:"age"`
-		Hobby  string    `json:"hobby"`
-		Lang   string    `json:"lang"`
-		Gitlab string    `json:"gitlab"`
-		Github string    `json:"github"`
 	}
 )
 
@@ -51,17 +43,46 @@ func Remake(c echo.Context) error {
 	}
 	log.Println("user was created: ", u)
 	return c.JSON(http.StatusOK, u)
-
 }
-
-func Hostinfo(c echo.Context) error {
+func Hosting(c echo.Context) error {
 	client := db.Config()
 	ctx := context.Background()
-	u, err := client.User.Query().Select(user.FieldName, user.FieldAge, user.FieldHobby, user.FieldLang, user.FieldGithub, user.FieldGitlab).Where(user.Name("최성현")).All(ctx)
+	var host []struct {
+		Name   string `json:"name"`
+		Age    string `json:"age"`
+		Hobby  string `json:"hobby"`
+		Lang   string `json:"lang"`
+		Github string `json:"github"`
+		Gitlab string `json:"gitlab"`
+	}
+	err := client.User.
+		Query().
+		Select(
+			user.FieldName,
+			user.FieldAge,
+			user.FieldHobby,
+			user.FieldLang,
+			user.FieldGithub,
+			user.FieldGitlab).
+		Scan(ctx, &host)
 	if err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusBadRequest, err)
+		return c.JSON(http.StatusBadRequest, host)
 	}
-	log.Println("user was created: ", u)
-	return c.JSON(http.StatusOK, u)
+
+	host[0].Age = diff(host[0].Age, time.Now())
+
+	return c.JSON(http.StatusOK, host)
+}
+
+//
+//	year := diff(births.Birthdays, time.Now())
+//
+
+func diff(a string, b time.Time) (year string) {
+	y1, _ := strconv.Atoi(a[:4])
+	y2, _, _ := b.Date()
+	year = strconv.Itoa(y2 - y1)
+
+	return
 }

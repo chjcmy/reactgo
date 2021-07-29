@@ -47,6 +47,14 @@ func (uc *UserCreate) SetAge(t time.Time) *UserCreate {
 	return uc
 }
 
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (uc *UserCreate) SetNillableAge(t *time.Time) *UserCreate {
+	if t != nil {
+		uc.SetAge(*t)
+	}
+	return uc
+}
+
 // SetHobby sets the "hobby" field.
 func (uc *UserCreate) SetHobby(s string) *UserCreate {
 	uc.mutation.SetHobby(s)
@@ -103,13 +111,13 @@ func (uc *UserCreate) SetNillableGitlab(s *string) *UserCreate {
 	return uc
 }
 
-// AddWriterIDs adds the "Writer" edge to the Book entity by IDs.
+// AddWriterIDs adds the "writer" edge to the Book entity by IDs.
 func (uc *UserCreate) AddWriterIDs(ids ...int) *UserCreate {
 	uc.mutation.AddWriterIDs(ids...)
 	return uc
 }
 
-// AddWriter adds the "Writer" edges to the Book entity.
+// AddWriter adds the "writer" edges to the Book entity.
 func (uc *UserCreate) AddWriter(b ...*Book) *UserCreate {
 	ids := make([]int, len(b))
 	for i := range b {
@@ -173,6 +181,10 @@ func (uc *UserCreate) defaults() {
 	if _, ok := uc.mutation.Password(); !ok {
 		v := user.DefaultPassword
 		uc.mutation.SetPassword(v)
+	}
+	if _, ok := uc.mutation.Age(); !ok {
+		v := user.DefaultAge()
+		uc.mutation.SetAge(v)
 	}
 	if _, ok := uc.mutation.Hobby(); !ok {
 		v := user.DefaultHobby

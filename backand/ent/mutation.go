@@ -41,6 +41,10 @@ type BookMutation struct {
 	updated_at    *time.Time
 	subject       *string
 	clearedFields map[string]struct{}
+	unitid        *int
+	clearedunitid bool
+	userid        *int
+	cleareduserid bool
 	done          bool
 	oldValue      func(context.Context) (*Book, error)
 	predicates    []predicate.Book
@@ -269,6 +273,84 @@ func (m *BookMutation) ResetSubject() {
 	m.subject = nil
 }
 
+// SetUnitidID sets the "unitid" edge to the Unit entity by id.
+func (m *BookMutation) SetUnitidID(id int) {
+	m.unitid = &id
+}
+
+// ClearUnitid clears the "unitid" edge to the Unit entity.
+func (m *BookMutation) ClearUnitid() {
+	m.clearedunitid = true
+}
+
+// UnitidCleared reports if the "unitid" edge to the Unit entity was cleared.
+func (m *BookMutation) UnitidCleared() bool {
+	return m.clearedunitid
+}
+
+// UnitidID returns the "unitid" edge ID in the mutation.
+func (m *BookMutation) UnitidID() (id int, exists bool) {
+	if m.unitid != nil {
+		return *m.unitid, true
+	}
+	return
+}
+
+// UnitidIDs returns the "unitid" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UnitidID instead. It exists only for internal usage by the builders.
+func (m *BookMutation) UnitidIDs() (ids []int) {
+	if id := m.unitid; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUnitid resets all changes to the "unitid" edge.
+func (m *BookMutation) ResetUnitid() {
+	m.unitid = nil
+	m.clearedunitid = false
+}
+
+// SetUseridID sets the "userid" edge to the User entity by id.
+func (m *BookMutation) SetUseridID(id int) {
+	m.userid = &id
+}
+
+// ClearUserid clears the "userid" edge to the User entity.
+func (m *BookMutation) ClearUserid() {
+	m.cleareduserid = true
+}
+
+// UseridCleared reports if the "userid" edge to the User entity was cleared.
+func (m *BookMutation) UseridCleared() bool {
+	return m.cleareduserid
+}
+
+// UseridID returns the "userid" edge ID in the mutation.
+func (m *BookMutation) UseridID() (id int, exists bool) {
+	if m.userid != nil {
+		return *m.userid, true
+	}
+	return
+}
+
+// UseridIDs returns the "userid" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UseridID instead. It exists only for internal usage by the builders.
+func (m *BookMutation) UseridIDs() (ids []int) {
+	if id := m.userid; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUserid resets all changes to the "userid" edge.
+func (m *BookMutation) ResetUserid() {
+	m.userid = nil
+	m.cleareduserid = false
+}
+
 // Op returns the operation name.
 func (m *BookMutation) Op() Op {
 	return m.op
@@ -433,49 +515,95 @@ func (m *BookMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *BookMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 2)
+	if m.unitid != nil {
+		edges = append(edges, book.EdgeUnitid)
+	}
+	if m.userid != nil {
+		edges = append(edges, book.EdgeUserid)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *BookMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case book.EdgeUnitid:
+		if id := m.unitid; id != nil {
+			return []ent.Value{*id}
+		}
+	case book.EdgeUserid:
+		if id := m.userid; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *BookMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 2)
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *BookMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *BookMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 2)
+	if m.clearedunitid {
+		edges = append(edges, book.EdgeUnitid)
+	}
+	if m.cleareduserid {
+		edges = append(edges, book.EdgeUserid)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *BookMutation) EdgeCleared(name string) bool {
+	switch name {
+	case book.EdgeUnitid:
+		return m.clearedunitid
+	case book.EdgeUserid:
+		return m.cleareduserid
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *BookMutation) ClearEdge(name string) error {
+	switch name {
+	case book.EdgeUnitid:
+		m.ClearUnitid()
+		return nil
+	case book.EdgeUserid:
+		m.ClearUserid()
+		return nil
+	}
 	return fmt.Errorf("unknown Book unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *BookMutation) ResetEdge(name string) error {
+	switch name {
+	case book.EdgeUnitid:
+		m.ResetUnitid()
+		return nil
+	case book.EdgeUserid:
+		m.ResetUserid()
+		return nil
+	}
 	return fmt.Errorf("unknown Book edge %s", name)
 }
 
@@ -915,23 +1043,23 @@ func (m *UnitMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *int
-	name           *string
-	password       *string
-	age            *time.Time
-	hobby          *string
-	lang           *string
-	github         *string
-	gitlab         *string
-	clearedFields  map[string]struct{}
-	_Writer        map[int]struct{}
-	removed_Writer map[int]struct{}
-	cleared_Writer bool
-	done           bool
-	oldValue       func(context.Context) (*User, error)
-	predicates     []predicate.User
+	op            Op
+	typ           string
+	id            *int
+	name          *string
+	password      *string
+	age           *time.Time
+	hobby         *string
+	lang          *string
+	github        *string
+	gitlab        *string
+	clearedFields map[string]struct{}
+	writer        map[int]struct{}
+	removedwriter map[int]struct{}
+	clearedwriter bool
+	done          bool
+	oldValue      func(context.Context) (*User, error)
+	predicates    []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -1265,57 +1393,57 @@ func (m *UserMutation) ResetGitlab() {
 	m.gitlab = nil
 }
 
-// AddWriterIDs adds the "Writer" edge to the Book entity by ids.
+// AddWriterIDs adds the "writer" edge to the Book entity by ids.
 func (m *UserMutation) AddWriterIDs(ids ...int) {
-	if m._Writer == nil {
-		m._Writer = make(map[int]struct{})
+	if m.writer == nil {
+		m.writer = make(map[int]struct{})
 	}
 	for i := range ids {
-		m._Writer[ids[i]] = struct{}{}
+		m.writer[ids[i]] = struct{}{}
 	}
 }
 
-// ClearWriter clears the "Writer" edge to the Book entity.
+// ClearWriter clears the "writer" edge to the Book entity.
 func (m *UserMutation) ClearWriter() {
-	m.cleared_Writer = true
+	m.clearedwriter = true
 }
 
-// WriterCleared reports if the "Writer" edge to the Book entity was cleared.
+// WriterCleared reports if the "writer" edge to the Book entity was cleared.
 func (m *UserMutation) WriterCleared() bool {
-	return m.cleared_Writer
+	return m.clearedwriter
 }
 
-// RemoveWriterIDs removes the "Writer" edge to the Book entity by IDs.
+// RemoveWriterIDs removes the "writer" edge to the Book entity by IDs.
 func (m *UserMutation) RemoveWriterIDs(ids ...int) {
-	if m.removed_Writer == nil {
-		m.removed_Writer = make(map[int]struct{})
+	if m.removedwriter == nil {
+		m.removedwriter = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.removed_Writer[ids[i]] = struct{}{}
+		m.removedwriter[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedWriter returns the removed IDs of the "Writer" edge to the Book entity.
+// RemovedWriter returns the removed IDs of the "writer" edge to the Book entity.
 func (m *UserMutation) RemovedWriterIDs() (ids []int) {
-	for id := range m.removed_Writer {
+	for id := range m.removedwriter {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// WriterIDs returns the "Writer" edge IDs in the mutation.
+// WriterIDs returns the "writer" edge IDs in the mutation.
 func (m *UserMutation) WriterIDs() (ids []int) {
-	for id := range m._Writer {
+	for id := range m.writer {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetWriter resets all changes to the "Writer" edge.
+// ResetWriter resets all changes to the "writer" edge.
 func (m *UserMutation) ResetWriter() {
-	m._Writer = nil
-	m.cleared_Writer = false
-	m.removed_Writer = nil
+	m.writer = nil
+	m.clearedwriter = false
+	m.removedwriter = nil
 }
 
 // Op returns the operation name.
@@ -1534,7 +1662,7 @@ func (m *UserMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m._Writer != nil {
+	if m.writer != nil {
 		edges = append(edges, user.EdgeWriter)
 	}
 	return edges
@@ -1545,8 +1673,8 @@ func (m *UserMutation) AddedEdges() []string {
 func (m *UserMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case user.EdgeWriter:
-		ids := make([]ent.Value, 0, len(m._Writer))
-		for id := range m._Writer {
+		ids := make([]ent.Value, 0, len(m.writer))
+		for id := range m.writer {
 			ids = append(ids, id)
 		}
 		return ids
@@ -1557,7 +1685,7 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.removed_Writer != nil {
+	if m.removedwriter != nil {
 		edges = append(edges, user.EdgeWriter)
 	}
 	return edges
@@ -1568,8 +1696,8 @@ func (m *UserMutation) RemovedEdges() []string {
 func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
 	case user.EdgeWriter:
-		ids := make([]ent.Value, 0, len(m.removed_Writer))
-		for id := range m.removed_Writer {
+		ids := make([]ent.Value, 0, len(m.removedwriter))
+		for id := range m.removedwriter {
 			ids = append(ids, id)
 		}
 		return ids
@@ -1580,7 +1708,7 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 1)
-	if m.cleared_Writer {
+	if m.clearedwriter {
 		edges = append(edges, user.EdgeWriter)
 	}
 	return edges
@@ -1591,7 +1719,7 @@ func (m *UserMutation) ClearedEdges() []string {
 func (m *UserMutation) EdgeCleared(name string) bool {
 	switch name {
 	case user.EdgeWriter:
-		return m.cleared_Writer
+		return m.clearedwriter
 	}
 	return false
 }

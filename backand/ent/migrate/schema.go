@@ -12,8 +12,8 @@ var (
 	BooksColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "title", Type: field.TypeString, Default: "unknown"},
-		{Name: "create_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "create_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
+		{Name: "updated_at", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "subject", Type: field.TypeString, Size: 2147483647, Default: "unknown"},
 		{Name: "unit_contents", Type: field.TypeInt, Nullable: true},
 		{Name: "user_writer", Type: field.TypeInt, Nullable: true},
@@ -31,7 +31,7 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:     "books_users_Writer",
+				Symbol:     "books_users_writer",
 				Columns:    []*schema.Column{BooksColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -56,7 +56,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "password", Type: field.TypeString, Default: "unknown"},
-		{Name: "age", Type: field.TypeTime},
+		{Name: "age", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "hobby", Type: field.TypeString, Default: "unknown"},
 		{Name: "lang", Type: field.TypeString, Default: "unknown"},
 		{Name: "github", Type: field.TypeString, Default: "unknown"},

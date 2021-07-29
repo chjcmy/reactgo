@@ -54,6 +54,14 @@ func (uu *UserUpdate) SetAge(t time.Time) *UserUpdate {
 	return uu
 }
 
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableAge(t *time.Time) *UserUpdate {
+	if t != nil {
+		uu.SetAge(*t)
+	}
+	return uu
+}
+
 // SetHobby sets the "hobby" field.
 func (uu *UserUpdate) SetHobby(s string) *UserUpdate {
 	uu.mutation.SetHobby(s)
@@ -110,13 +118,13 @@ func (uu *UserUpdate) SetNillableGitlab(s *string) *UserUpdate {
 	return uu
 }
 
-// AddWriterIDs adds the "Writer" edge to the Book entity by IDs.
+// AddWriterIDs adds the "writer" edge to the Book entity by IDs.
 func (uu *UserUpdate) AddWriterIDs(ids ...int) *UserUpdate {
 	uu.mutation.AddWriterIDs(ids...)
 	return uu
 }
 
-// AddWriter adds the "Writer" edges to the Book entity.
+// AddWriter adds the "writer" edges to the Book entity.
 func (uu *UserUpdate) AddWriter(b ...*Book) *UserUpdate {
 	ids := make([]int, len(b))
 	for i := range b {
@@ -130,19 +138,19 @@ func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
 }
 
-// ClearWriter clears all "Writer" edges to the Book entity.
+// ClearWriter clears all "writer" edges to the Book entity.
 func (uu *UserUpdate) ClearWriter() *UserUpdate {
 	uu.mutation.ClearWriter()
 	return uu
 }
 
-// RemoveWriterIDs removes the "Writer" edge to Book entities by IDs.
+// RemoveWriterIDs removes the "writer" edge to Book entities by IDs.
 func (uu *UserUpdate) RemoveWriterIDs(ids ...int) *UserUpdate {
 	uu.mutation.RemoveWriterIDs(ids...)
 	return uu
 }
 
-// RemoveWriter removes "Writer" edges to Book entities.
+// RemoveWriter removes "writer" edges to Book entities.
 func (uu *UserUpdate) RemoveWriter(b ...*Book) *UserUpdate {
 	ids := make([]int, len(b))
 	for i := range b {
@@ -368,6 +376,14 @@ func (uuo *UserUpdateOne) SetAge(t time.Time) *UserUpdateOne {
 	return uuo
 }
 
+// SetNillableAge sets the "age" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableAge(t *time.Time) *UserUpdateOne {
+	if t != nil {
+		uuo.SetAge(*t)
+	}
+	return uuo
+}
+
 // SetHobby sets the "hobby" field.
 func (uuo *UserUpdateOne) SetHobby(s string) *UserUpdateOne {
 	uuo.mutation.SetHobby(s)
@@ -424,13 +440,13 @@ func (uuo *UserUpdateOne) SetNillableGitlab(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// AddWriterIDs adds the "Writer" edge to the Book entity by IDs.
+// AddWriterIDs adds the "writer" edge to the Book entity by IDs.
 func (uuo *UserUpdateOne) AddWriterIDs(ids ...int) *UserUpdateOne {
 	uuo.mutation.AddWriterIDs(ids...)
 	return uuo
 }
 
-// AddWriter adds the "Writer" edges to the Book entity.
+// AddWriter adds the "writer" edges to the Book entity.
 func (uuo *UserUpdateOne) AddWriter(b ...*Book) *UserUpdateOne {
 	ids := make([]int, len(b))
 	for i := range b {
@@ -444,19 +460,19 @@ func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
 }
 
-// ClearWriter clears all "Writer" edges to the Book entity.
+// ClearWriter clears all "writer" edges to the Book entity.
 func (uuo *UserUpdateOne) ClearWriter() *UserUpdateOne {
 	uuo.mutation.ClearWriter()
 	return uuo
 }
 
-// RemoveWriterIDs removes the "Writer" edge to Book entities by IDs.
+// RemoveWriterIDs removes the "writer" edge to Book entities by IDs.
 func (uuo *UserUpdateOne) RemoveWriterIDs(ids ...int) *UserUpdateOne {
 	uuo.mutation.RemoveWriterIDs(ids...)
 	return uuo
 }
 
-// RemoveWriter removes "Writer" edges to Book entities.
+// RemoveWriter removes "writer" edges to Book entities.
 func (uuo *UserUpdateOne) RemoveWriter(b ...*Book) *UserUpdateOne {
 	ids := make([]int, len(b))
 	for i := range b {

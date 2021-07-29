@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
@@ -18,7 +19,11 @@ func (User) Fields() []ent.Field {
 			Unique(),
 		field.String("password").
 			Default("unknown"),
-		field.Time("age"),
+		field.Time("age").
+			SchemaType(map[string]string{
+				dialect.MySQL: "datetime",
+			}).
+			Default(nil),
 		field.String("hobby").
 			Default("unknown"),
 		field.String("lang").
@@ -33,6 +38,6 @@ func (User) Fields() []ent.Field {
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("Writer", Book.Type),
+		edge.To("writer", Book.Type),
 	}
 }
