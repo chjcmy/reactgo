@@ -5,7 +5,9 @@ RUN apt update && apt upgrade -y && \
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+RUN mkdir -p /app/github.com
+
+COPY go.mod go.sum ./github.com/
 
 RUN go mod download
 
