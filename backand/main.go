@@ -2,9 +2,8 @@ package main
 
 import (
 	"context"
-	bookapi "github.com/backand/api"
-	unitapi "github.com/backand/api"
-	userapi "github.com/backand/api"
+	api "github.com/backand/api"
+
 	"github.com/backand/db"
 	"github.com/backand/ent"
 	_ "github.com/go-sql-driver/mysql"
@@ -57,17 +56,17 @@ func main() {
 	e.Use(middleware.Recover())
 
 	e.POST("/users", createUser)
-	e.POST("/remake", userapi.Remake)
-	e.GET("/hosting", userapi.Hosting)
-	e.POST("/unittest", unitapi.UnitCreate)
-	e.GET("/unitshosting", unitapi.UnitHosting)
-	e.POST("/bookcreate", bookapi.BookCreate)
-	e.GET("/bookread/:id", bookapi.BookRead)
-	e.GET("/bookshow/:num", bookapi.BookShow)
-	e.GET("/pickunitbooks/:id/:num", bookapi.PickUnitBook)
-	e.DELETE("/bookdelete/:id", bookapi.BookDelete)
-	e.PUT("/bookupdate/:id", bookapi.BookUpdate)
-	e.GET("/newbooks", bookapi.NewBooks)
+	e.POST("/remake", api.Remake)
+	e.GET("/hosting", api.Hosting)
+	e.POST("/unittest", api.UnitCreate)
+	e.GET("/unitshosting", api.UnitHosting)
+	e.POST("/bookcreate", api.BookCreate)
+	e.GET("/bookread/:id", api.BookRead)
+	e.GET("/bookshow/:num", api.BookShow)
+	e.GET("/pickunitbooks/:id/:num", api.PickUnitBook)
+	e.DELETE("/bookdelete/:id", api.BookDelete)
+	e.PUT("/bookupdate/:id", api.BookUpdate)
+	e.GET("/newbooks", api.NewBooks)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }
