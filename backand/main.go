@@ -64,8 +64,10 @@ func main() {
 	e.POST("/bookcreate", bookapi.BookCreate)
 	e.GET("/bookread/:id", bookapi.BookRead)
 	e.GET("/bookshow/:num", bookapi.BookShow)
+	e.GET("/pickunitbooks/:id/:num", bookapi.PickUnitBook)
 	e.DELETE("/bookdelete/:id", bookapi.BookDelete)
 	e.PUT("/bookupdate/:id", bookapi.BookUpdate)
+	e.GET("/newbooks", bookapi.NewBooks)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

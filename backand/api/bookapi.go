@@ -5,6 +5,7 @@ import (
 	"github.com/backand/db"
 	"github.com/backand/ent"
 	"github.com/backand/ent/book"
+	"github.com/backand/ent/unit"
 	"github.com/backand/ent/user"
 	"github.com/labstack/echo/v4"
 	"log"
@@ -109,4 +110,36 @@ func BookDelete(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	return c.JSON(http.StatusOK, "success")
+}
+
+func PickUnitBook(c echo.Context) error {
+	client := db.Config()
+	num, _ := strconv.Atoi(c.Param("num"))
+	ctx := context.Background()
+	r, err := client.Book.Query().
+		WithUnitid(func(q *ent.UnitQuery) {
+			q.Select(unit.FieldID)
+		}).
+		Limit(10).
+		Offset(num).
+		All(ctx)
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, r)
+}
+
+func NewBooks(c echo.Context) error {
+	client := db.Config()
+	ctx := context.Background()
+	r, err := client.Book.Query().
+		Limit(5).
+		Offset(1).
+		All(ctx)
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, r)
 }

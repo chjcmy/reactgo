@@ -44,6 +44,7 @@ func Remake(c echo.Context) error {
 	log.Println("user was created: ", u)
 	return c.JSON(http.StatusOK, u)
 }
+
 func Hosting(c echo.Context) error {
 	client := db.Config()
 	ctx := context.Background()
@@ -55,8 +56,8 @@ func Hosting(c echo.Context) error {
 		Github string `json:"github"`
 		Gitlab string `json:"gitlab"`
 	}
-	err := client.User.
-		Query().
+	err := client.User.Query().
+		Where(user.Name("최성현")).
 		Select(
 			user.FieldName,
 			user.FieldAge,
@@ -74,10 +75,6 @@ func Hosting(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, host)
 }
-
-//
-//	year := diff(births.Birthdays, time.Now())
-//
 
 func diff(a string, b time.Time) (year string) {
 	y1, _ := strconv.Atoi(a[:4])
