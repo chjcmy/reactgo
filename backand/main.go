@@ -5,7 +5,6 @@ import (
 	api "github.com/backand/api"
 
 	"github.com/backand/db"
-	"github.com/backand/ent"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -43,15 +42,11 @@ func createUser(c echo.Context) error {
 
 func main() {
 	e := echo.New()
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	}))
 
-	client, err := ent.Open("mysql", "cshcmi:chltjdgus123!@tcp(choi1994.iptime.org:1994)/blog?charset=utf8mb4&parseTime=True")
-	if err != nil {
-		log.Fatalf("failed opening connection to sqlite: %v", err)
-	}
-	defer client.Close()
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Panicf("failed creating schema resources: %v", err)
-	}
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
