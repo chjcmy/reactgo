@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {instance} from "../axios";
-import styles from "../CSS/sidebar.css"
-import classNames from "classnames/bind";
-const css = classNames.bind(styles);
 
 const SideBar = () => {
 
@@ -25,7 +22,7 @@ const SideBar = () => {
         console.log(unit)
     }, [])
     return (
-        <div className={css('SideBarbody')}>
+        <div>
             SideBar
         </div>
     );
