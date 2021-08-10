@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"github.com/backand/db"
 	"github.com/backand/ent"
 	"github.com/backand/ent/book"
@@ -114,9 +115,15 @@ func BookDelete(c echo.Context) error {
 
 func PickUnitBook(c echo.Context) error {
 	client := db.Config()
+	id, _ := strconv.Atoi(c.Param("id"))
 	num, _ := strconv.Atoi(c.Param("num"))
 	ctx := context.Background()
+	fmt.Println(id)
 	r, err := client.Book.Query().
+		Where(
+			book.HasUnitidWith(
+				unit.ID(id),
+			)).
 		WithUnitid(func(q *ent.UnitQuery) {
 			q.Select(unit.FieldID)
 		}).
