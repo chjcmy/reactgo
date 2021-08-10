@@ -1,12 +1,22 @@
-import React from 'react';
+import React, {FC} from 'react';
 import './App.css';
-import Header from "./component/header/Header";
+import SideBar from "./components/common/Sidebar";
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import Unit from "./components/common/unit/Unit";
+import Home from "./components/common/home/Home";
 
-function App() {
+const App: FC = () => {
     return (
-        <div>
-            <Header/>
-        </div>
+        <Router>
+            <SideBar/>
+            <div className="overview">
+                <Switch>
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/unit/:unit" component={Unit}/>
+                    <Route path="/all" component={Unit} />
+                </Switch>
+            </div>
+        </Router>
     );
 }
 
