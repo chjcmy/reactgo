@@ -62,7 +62,7 @@ const LogoLink = styled(Link)`
   font-family: Neodgm, serif;
   color: #ffffff;
   text-align: center;
-  margin-left: 30rem;
+  margin-left: 10%;
   
   :active {
     color: black;

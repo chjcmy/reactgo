@@ -6,7 +6,7 @@ const Unit = ({match} : {match: any})=> {
     const [books, setBooks] = useState<any[]>([]);
 
     const findAllBook = async () => {
-        const res = await instance.get('/bookshow/1')
+        const res = await instance.get('/bookshow/0')
         setBooks(res.data)
         console.log(res.data)
     };
