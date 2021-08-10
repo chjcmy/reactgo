@@ -1,17 +1,23 @@
-import React from 'react';
+import React, {FC} from 'react';
 import './App.css';
-import Header from "./component/Header";
-import Body from "./component/Body";
-import Footer from "./component/Footer";
+import SideBar from "./components/common/Sidebar";
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import Unit from "./components/common/unit/Unit";
+import Home from "./components/common/home/Home";
 
-function App() {
-  return (
-    <div>
-      <Header/>
-      <Body/>
-      <Footer/>
-    </div>
-  );
+const App: FC = () => {
+    return (
+        <Router>
+            <SideBar/>
+            <div className="overview">
+                <Switch>
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/unit/:unit" component={Unit}/>
+                    <Route path="/all" component={Unit} />
+                </Switch>
+            </div>
+        </Router>
+    );
 }
 
 export default App;

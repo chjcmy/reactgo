@@ -1,0 +1,10 @@
+.Home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.NewBooks {
+    font-family: Neodgm, serif;
+}
