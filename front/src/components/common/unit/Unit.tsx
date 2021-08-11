@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {instance} from "../../../axios";
 
-const Unit = ({match} : {match: any})=> {
+const Unit = ({match} : {match: any}) => {
 
     const [books, setBooks] = useState<any[]>([]);
 

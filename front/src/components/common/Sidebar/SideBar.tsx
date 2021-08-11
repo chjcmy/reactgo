@@ -6,6 +6,7 @@ import {IconContext} from "react-icons";
 import {AiOutlineClose, AiOutlineMenu} from "react-icons/all";
 
 import "./SideBar.css"
+import Login from "../Login/Login";
 
 
 const Nav = styled.div`
@@ -58,11 +59,11 @@ const LogoLink = styled(Link)`
   align-items: center;
   display: flex;
   justify-content: center;
-  font-size: 3rem;
+  font-size: 200%;
   font-family: Neodgm, serif;
   color: #ffffff;
   text-align: center;
-  margin-left: 10%;
+  margin-left: 35%;
   
   :active {
     color: black;
@@ -80,6 +81,7 @@ const SideBar: FC = () => {
         await instance.get('/unitshosting').then(
             function (res: { data: []; }) {
                 setUnits(res.data)
+                console.log(units)
             })
             .catch(function (error: any) {
                     console.log(error)
@@ -88,7 +90,7 @@ const SideBar: FC = () => {
     };
 
     useEffect(() => {
-        findUnits().then(r => console.log(r));
+        findUnits()
     }, [])
 
 
@@ -117,6 +119,7 @@ const SideBar: FC = () => {
                             </SidebarLink>
                         )
                     )}
+                    <Login/>
                 </SidebarWrap>
             </SidebarNav>
         </IconContext.Provider>
