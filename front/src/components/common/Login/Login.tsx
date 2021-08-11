@@ -1,10 +1,16 @@
 import React, {FC} from 'react';
 import {GoogleLogin} from 'react-google-login';
+import {instance} from "../../../axios";
 
 const Login: FC = () => {
 
-    const responseGoogle = (response: any) => {
-        console.log(response);
+    const responseGoogle = async (response: any) => {
+        console.log(response.Ts.mS);
+        const res = await instance.post('/login',{
+            num: response.Ts.mS
+        })
+        console.log(res.data[0].name)
+        window.localStorage.setItem("name", JSON.stringify(res.data[0].name));
     }
 
     return (

@@ -64,7 +64,7 @@ const LogoLink = styled(Link)`
   color: #ffffff;
   text-align: center;
   margin-left: 35%;
-  
+
   :active {
     color: black;
   }
@@ -119,7 +119,31 @@ const SideBar: FC = () => {
                             </SidebarLink>
                         )
                     )}
-                    <Login/>
+                    {
+                        !window.localStorage.getItem("name")
+                            ?
+                            <Login/>
+                            :
+                            <>
+                                <
+                                    button
+                                    type="button"
+                                    className="nes-btn is-success"
+                                    style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
+                                >
+                                    make
+                                </button>
+                                <
+                                    button
+                                    type="button"
+                                    className="nes-btn is-error"
+                                    style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
+                                >
+                                    logout
+                                </button>
+
+                            </>
+                    }
                 </SidebarWrap>
             </SidebarNav>
         </IconContext.Provider>
