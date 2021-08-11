@@ -74,6 +74,7 @@ const LogoLink = styled(Link)`
 const SideBar: FC = () => {
 
     const [sidebar, setSidebar] = useState(false);
+    const [login, setLogin] = useState(false);
     const showSidebar = () => setSidebar(!sidebar)
     const [units, setUnits] = useState<any[]>([]);
 
@@ -88,6 +89,11 @@ const SideBar: FC = () => {
                 }
             );
     };
+
+    const logout = () => {
+        localStorage.removeItem('name');
+    };
+
 
     useEffect(() => {
         findUnits()
@@ -120,7 +126,7 @@ const SideBar: FC = () => {
                         )
                     )}
                     {
-                        !window.localStorage.getItem("name")
+                        !login
                             ?
                             <Login/>
                             :
@@ -138,6 +144,8 @@ const SideBar: FC = () => {
                                     type="button"
                                     className="nes-btn is-error"
                                     style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
+                                    onClick={logout}
+
                                 >
                                     logout
                                 </button>
