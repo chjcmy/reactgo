@@ -62,6 +62,7 @@ func main() {
 	e.DELETE("/bookdelete/:id", api.BookDelete)
 	e.PUT("/bookupdate/:id", api.BookUpdate)
 	e.GET("/newbooks", api.NewBooks)
+	e.POST("/login", api.Login)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

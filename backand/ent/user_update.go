@@ -34,20 +34,6 @@ func (uu *UserUpdate) SetName(s string) *UserUpdate {
 	return uu
 }
 
-// SetPassword sets the "password" field.
-func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
-	uu.mutation.SetPassword(s)
-	return uu
-}
-
-// SetNillablePassword sets the "password" field if the given value is not nil.
-func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetPassword(*s)
-	}
-	return uu
-}
-
 // SetAge sets the "age" field.
 func (uu *UserUpdate) SetAge(t time.Time) *UserUpdate {
 	uu.mutation.SetAge(t)
@@ -58,6 +44,34 @@ func (uu *UserUpdate) SetAge(t time.Time) *UserUpdate {
 func (uu *UserUpdate) SetNillableAge(t *time.Time) *UserUpdate {
 	if t != nil {
 		uu.SetAge(*t)
+	}
+	return uu
+}
+
+// SetEmail sets the "email" field.
+func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
+	uu.mutation.SetEmail(s)
+	return uu
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableEmail(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetEmail(*s)
+	}
+	return uu
+}
+
+// SetGooglenum sets the "googlenum" field.
+func (uu *UserUpdate) SetGooglenum(s string) *UserUpdate {
+	uu.mutation.SetGooglenum(s)
+	return uu
+}
+
+// SetNillableGooglenum sets the "googlenum" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableGooglenum(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetGooglenum(*s)
 	}
 	return uu
 }
@@ -235,18 +249,25 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldName,
 		})
 	}
-	if value, ok := uu.mutation.Password(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldPassword,
-		})
-	}
 	if value, ok := uu.mutation.Age(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: user.FieldAge,
+		})
+	}
+	if value, ok := uu.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldEmail,
+		})
+	}
+	if value, ok := uu.mutation.Googlenum(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldGooglenum,
 		})
 	}
 	if value, ok := uu.mutation.Hobby(); ok {
@@ -356,20 +377,6 @@ func (uuo *UserUpdateOne) SetName(s string) *UserUpdateOne {
 	return uuo
 }
 
-// SetPassword sets the "password" field.
-func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
-	uuo.mutation.SetPassword(s)
-	return uuo
-}
-
-// SetNillablePassword sets the "password" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetPassword(*s)
-	}
-	return uuo
-}
-
 // SetAge sets the "age" field.
 func (uuo *UserUpdateOne) SetAge(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetAge(t)
@@ -380,6 +387,34 @@ func (uuo *UserUpdateOne) SetAge(t time.Time) *UserUpdateOne {
 func (uuo *UserUpdateOne) SetNillableAge(t *time.Time) *UserUpdateOne {
 	if t != nil {
 		uuo.SetAge(*t)
+	}
+	return uuo
+}
+
+// SetEmail sets the "email" field.
+func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
+	uuo.mutation.SetEmail(s)
+	return uuo
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableEmail(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetEmail(*s)
+	}
+	return uuo
+}
+
+// SetGooglenum sets the "googlenum" field.
+func (uuo *UserUpdateOne) SetGooglenum(s string) *UserUpdateOne {
+	uuo.mutation.SetGooglenum(s)
+	return uuo
+}
+
+// SetNillableGooglenum sets the "googlenum" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableGooglenum(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetGooglenum(*s)
 	}
 	return uuo
 }
@@ -581,18 +616,25 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Column: user.FieldName,
 		})
 	}
-	if value, ok := uuo.mutation.Password(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldPassword,
-		})
-	}
 	if value, ok := uuo.mutation.Age(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: user.FieldAge,
+		})
+	}
+	if value, ok := uuo.mutation.Email(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldEmail,
+		})
+	}
+	if value, ok := uuo.mutation.Googlenum(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldGooglenum,
 		})
 	}
 	if value, ok := uuo.mutation.Hobby(); ok {

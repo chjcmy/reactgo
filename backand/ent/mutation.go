@@ -1047,8 +1047,9 @@ type UserMutation struct {
 	typ           string
 	id            *int
 	name          *string
-	password      *string
 	age           *time.Time
+	email         *string
+	googlenum     *string
 	hobby         *string
 	lang          *string
 	github        *string
@@ -1177,42 +1178,6 @@ func (m *UserMutation) ResetName() {
 	m.name = nil
 }
 
-// SetPassword sets the "password" field.
-func (m *UserMutation) SetPassword(s string) {
-	m.password = &s
-}
-
-// Password returns the value of the "password" field in the mutation.
-func (m *UserMutation) Password() (r string, exists bool) {
-	v := m.password
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPassword returns the old "password" field's value of the User entity.
-// If the User object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldPassword(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldPassword is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldPassword requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPassword: %w", err)
-	}
-	return oldValue.Password, nil
-}
-
-// ResetPassword resets all changes to the "password" field.
-func (m *UserMutation) ResetPassword() {
-	m.password = nil
-}
-
 // SetAge sets the "age" field.
 func (m *UserMutation) SetAge(t time.Time) {
 	m.age = &t
@@ -1247,6 +1212,78 @@ func (m *UserMutation) OldAge(ctx context.Context) (v time.Time, err error) {
 // ResetAge resets all changes to the "age" field.
 func (m *UserMutation) ResetAge() {
 	m.age = nil
+}
+
+// SetEmail sets the "email" field.
+func (m *UserMutation) SetEmail(s string) {
+	m.email = &s
+}
+
+// Email returns the value of the "email" field in the mutation.
+func (m *UserMutation) Email() (r string, exists bool) {
+	v := m.email
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEmail returns the old "email" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldEmail(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldEmail is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldEmail requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEmail: %w", err)
+	}
+	return oldValue.Email, nil
+}
+
+// ResetEmail resets all changes to the "email" field.
+func (m *UserMutation) ResetEmail() {
+	m.email = nil
+}
+
+// SetGooglenum sets the "googlenum" field.
+func (m *UserMutation) SetGooglenum(s string) {
+	m.googlenum = &s
+}
+
+// Googlenum returns the value of the "googlenum" field in the mutation.
+func (m *UserMutation) Googlenum() (r string, exists bool) {
+	v := m.googlenum
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGooglenum returns the old "googlenum" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGooglenum(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGooglenum is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGooglenum requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGooglenum: %w", err)
+	}
+	return oldValue.Googlenum, nil
+}
+
+// ResetGooglenum resets all changes to the "googlenum" field.
+func (m *UserMutation) ResetGooglenum() {
+	m.googlenum = nil
 }
 
 // SetHobby sets the "hobby" field.
@@ -1460,15 +1497,18 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.name != nil {
 		fields = append(fields, user.FieldName)
 	}
-	if m.password != nil {
-		fields = append(fields, user.FieldPassword)
-	}
 	if m.age != nil {
 		fields = append(fields, user.FieldAge)
+	}
+	if m.email != nil {
+		fields = append(fields, user.FieldEmail)
+	}
+	if m.googlenum != nil {
+		fields = append(fields, user.FieldGooglenum)
 	}
 	if m.hobby != nil {
 		fields = append(fields, user.FieldHobby)
@@ -1492,10 +1532,12 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case user.FieldName:
 		return m.Name()
-	case user.FieldPassword:
-		return m.Password()
 	case user.FieldAge:
 		return m.Age()
+	case user.FieldEmail:
+		return m.Email()
+	case user.FieldGooglenum:
+		return m.Googlenum()
 	case user.FieldHobby:
 		return m.Hobby()
 	case user.FieldLang:
@@ -1515,10 +1557,12 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 	switch name {
 	case user.FieldName:
 		return m.OldName(ctx)
-	case user.FieldPassword:
-		return m.OldPassword(ctx)
 	case user.FieldAge:
 		return m.OldAge(ctx)
+	case user.FieldEmail:
+		return m.OldEmail(ctx)
+	case user.FieldGooglenum:
+		return m.OldGooglenum(ctx)
 	case user.FieldHobby:
 		return m.OldHobby(ctx)
 	case user.FieldLang:
@@ -1543,19 +1587,26 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
-	case user.FieldPassword:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPassword(v)
-		return nil
 	case user.FieldAge:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAge(v)
+		return nil
+	case user.FieldEmail:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEmail(v)
+		return nil
+	case user.FieldGooglenum:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGooglenum(v)
 		return nil
 	case user.FieldHobby:
 		v, ok := value.(string)
@@ -1637,11 +1688,14 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldName:
 		m.ResetName()
 		return nil
-	case user.FieldPassword:
-		m.ResetPassword()
-		return nil
 	case user.FieldAge:
 		m.ResetAge()
+		return nil
+	case user.FieldEmail:
+		m.ResetEmail()
+		return nil
+	case user.FieldGooglenum:
+		m.ResetGooglenum()
 		return nil
 	case user.FieldHobby:
 		m.ResetHobby()

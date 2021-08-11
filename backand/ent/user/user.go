@@ -13,10 +13,12 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldPassword holds the string denoting the password field in the database.
-	FieldPassword = "password"
 	// FieldAge holds the string denoting the age field in the database.
 	FieldAge = "age"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
+	// FieldGooglenum holds the string denoting the googlenum field in the database.
+	FieldGooglenum = "googlenum"
 	// FieldHobby holds the string denoting the hobby field in the database.
 	FieldHobby = "hobby"
 	// FieldLang holds the string denoting the lang field in the database.
@@ -42,8 +44,9 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldName,
-	FieldPassword,
 	FieldAge,
+	FieldEmail,
+	FieldGooglenum,
 	FieldHobby,
 	FieldLang,
 	FieldGithub,
@@ -61,10 +64,12 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultPassword holds the default value on creation for the "password" field.
-	DefaultPassword string
 	// DefaultAge holds the default value on creation for the "age" field.
 	DefaultAge func() time.Time
+	// DefaultEmail holds the default value on creation for the "email" field.
+	DefaultEmail string
+	// DefaultGooglenum holds the default value on creation for the "googlenum" field.
+	DefaultGooglenum string
 	// DefaultHobby holds the default value on creation for the "hobby" field.
 	DefaultHobby string
 	// DefaultLang holds the default value on creation for the "lang" field.
