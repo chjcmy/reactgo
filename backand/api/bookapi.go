@@ -141,11 +141,10 @@ func NewBooks(c echo.Context) error {
 	client := db.Config()
 	ctx := context.Background()
 	r, err := client.Book.Query().
+		Limit(5).
 		WithUnitid(func(q *ent.UnitQuery) {
 			q.Select(unit.FieldContentName)
-		}).
-		Limit(5).
-		All(ctx)
+		}).All(ctx)
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
