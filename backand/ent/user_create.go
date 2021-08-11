@@ -27,20 +27,6 @@ func (uc *UserCreate) SetName(s string) *UserCreate {
 	return uc
 }
 
-// SetPassword sets the "password" field.
-func (uc *UserCreate) SetPassword(s string) *UserCreate {
-	uc.mutation.SetPassword(s)
-	return uc
-}
-
-// SetNillablePassword sets the "password" field if the given value is not nil.
-func (uc *UserCreate) SetNillablePassword(s *string) *UserCreate {
-	if s != nil {
-		uc.SetPassword(*s)
-	}
-	return uc
-}
-
 // SetAge sets the "age" field.
 func (uc *UserCreate) SetAge(t time.Time) *UserCreate {
 	uc.mutation.SetAge(t)
@@ -51,6 +37,34 @@ func (uc *UserCreate) SetAge(t time.Time) *UserCreate {
 func (uc *UserCreate) SetNillableAge(t *time.Time) *UserCreate {
 	if t != nil {
 		uc.SetAge(*t)
+	}
+	return uc
+}
+
+// SetEmail sets the "email" field.
+func (uc *UserCreate) SetEmail(s string) *UserCreate {
+	uc.mutation.SetEmail(s)
+	return uc
+}
+
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uc *UserCreate) SetNillableEmail(s *string) *UserCreate {
+	if s != nil {
+		uc.SetEmail(*s)
+	}
+	return uc
+}
+
+// SetGooglenum sets the "googlenum" field.
+func (uc *UserCreate) SetGooglenum(s string) *UserCreate {
+	uc.mutation.SetGooglenum(s)
+	return uc
+}
+
+// SetNillableGooglenum sets the "googlenum" field if the given value is not nil.
+func (uc *UserCreate) SetNillableGooglenum(s *string) *UserCreate {
+	if s != nil {
+		uc.SetGooglenum(*s)
 	}
 	return uc
 }
@@ -178,13 +192,17 @@ func (uc *UserCreate) SaveX(ctx context.Context) *User {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
-	if _, ok := uc.mutation.Password(); !ok {
-		v := user.DefaultPassword
-		uc.mutation.SetPassword(v)
-	}
 	if _, ok := uc.mutation.Age(); !ok {
 		v := user.DefaultAge()
 		uc.mutation.SetAge(v)
+	}
+	if _, ok := uc.mutation.Email(); !ok {
+		v := user.DefaultEmail
+		uc.mutation.SetEmail(v)
+	}
+	if _, ok := uc.mutation.Googlenum(); !ok {
+		v := user.DefaultGooglenum
+		uc.mutation.SetGooglenum(v)
 	}
 	if _, ok := uc.mutation.Hobby(); !ok {
 		v := user.DefaultHobby
@@ -209,11 +227,14 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New("ent: missing required field \"name\"")}
 	}
-	if _, ok := uc.mutation.Password(); !ok {
-		return &ValidationError{Name: "password", err: errors.New("ent: missing required field \"password\"")}
-	}
 	if _, ok := uc.mutation.Age(); !ok {
 		return &ValidationError{Name: "age", err: errors.New("ent: missing required field \"age\"")}
+	}
+	if _, ok := uc.mutation.Email(); !ok {
+		return &ValidationError{Name: "email", err: errors.New("ent: missing required field \"email\"")}
+	}
+	if _, ok := uc.mutation.Googlenum(); !ok {
+		return &ValidationError{Name: "googlenum", err: errors.New("ent: missing required field \"googlenum\"")}
 	}
 	if _, ok := uc.mutation.Hobby(); !ok {
 		return &ValidationError{Name: "hobby", err: errors.New("ent: missing required field \"hobby\"")}
@@ -262,14 +283,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		})
 		_node.Name = value
 	}
-	if value, ok := uc.mutation.Password(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldPassword,
-		})
-		_node.Password = value
-	}
 	if value, ok := uc.mutation.Age(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -277,6 +290,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldAge,
 		})
 		_node.Age = value
+	}
+	if value, ok := uc.mutation.Email(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldEmail,
+		})
+		_node.Email = value
+	}
+	if value, ok := uc.mutation.Googlenum(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldGooglenum,
+		})
+		_node.Googlenum = value
 	}
 	if value, ok := uc.mutation.Hobby(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

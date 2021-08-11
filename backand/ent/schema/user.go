@@ -17,13 +17,15 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").
 			Unique(),
-		field.String("password").
-			Default("unknown"),
 		field.Time("age").
 			SchemaType(map[string]string{
 				dialect.MySQL: "datetime",
 			}).
 			Default(nil),
+		field.String("email").
+			Default("unknown"),
+		field.String("googlenum").
+			Default(""),
 		field.String("hobby").
 			Default("unknown"),
 		field.String("lang").

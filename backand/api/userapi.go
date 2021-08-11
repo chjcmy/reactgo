@@ -21,6 +21,10 @@ type (
 		Gitlab   string    `json:"gitlab"`
 		Github   string    `json:"github"`
 	}
+
+	googleNum struct {
+		Num string `json:"num"`
+	}
 )
 
 func Remake(c echo.Context) error {
@@ -30,7 +34,6 @@ func Remake(c echo.Context) error {
 	ctx := context.Background()
 	u, err := client.User.Create().
 		SetName(infos.Name).
-		SetPassword(infos.Password).
 		SetAge(infos.Age).
 		SetHobby(infos.Hobby).
 		SetLang(infos.Lang).
@@ -45,6 +48,25 @@ func Remake(c echo.Context) error {
 	return c.JSON(http.StatusOK, u)
 }
 
+func Login(c echo.Context) error {
+	var userName []struct {
+		Name string `json:"name"`
+	}
+	client := db.Config()
+	nums := &googleNum{}
+	c.Bind(nums)
+	ctx := context.Background()
+	err := client.User.Query().
+		Where(user.Googlenum(nums.Num)).
+		Select(user.FieldName).
+		Scan(ctx, &userName)
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, userName)
+}
+
 func Hosting(c echo.Context) error {
 	client := db.Config()
 	ctx := context.Background()
@@ -55,6 +77,7 @@ func Hosting(c echo.Context) error {
 		Lang   string `json:"lang"`
 		Github string `json:"github"`
 		Gitlab string `json:"gitlab"`
+		Email  string `json:"email"`
 	}
 	err := client.User.Query().
 		Where(user.Name("최성현")).
@@ -64,7 +87,9 @@ func Hosting(c echo.Context) error {
 			user.FieldHobby,
 			user.FieldLang,
 			user.FieldGithub,
-			user.FieldGitlab).
+			user.FieldGitlab,
+			user.FieldEmail,
+		).
 		Scan(ctx, &host)
 	if err != nil {
 		log.Println(err)

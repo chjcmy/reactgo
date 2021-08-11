@@ -47,28 +47,32 @@ func init() {
 	unit.DefaultContentName = unitDescContentName.Default.(string)
 	userFields := schema.User{}.Fields()
 	_ = userFields
-	// userDescPassword is the schema descriptor for password field.
-	userDescPassword := userFields[1].Descriptor()
-	// user.DefaultPassword holds the default value on creation for the password field.
-	user.DefaultPassword = userDescPassword.Default.(string)
 	// userDescAge is the schema descriptor for age field.
-	userDescAge := userFields[2].Descriptor()
+	userDescAge := userFields[1].Descriptor()
 	// user.DefaultAge holds the default value on creation for the age field.
 	user.DefaultAge = userDescAge.Default.(func() time.Time)
+	// userDescEmail is the schema descriptor for email field.
+	userDescEmail := userFields[2].Descriptor()
+	// user.DefaultEmail holds the default value on creation for the email field.
+	user.DefaultEmail = userDescEmail.Default.(string)
+	// userDescGooglenum is the schema descriptor for googlenum field.
+	userDescGooglenum := userFields[3].Descriptor()
+	// user.DefaultGooglenum holds the default value on creation for the googlenum field.
+	user.DefaultGooglenum = userDescGooglenum.Default.(string)
 	// userDescHobby is the schema descriptor for hobby field.
-	userDescHobby := userFields[3].Descriptor()
+	userDescHobby := userFields[4].Descriptor()
 	// user.DefaultHobby holds the default value on creation for the hobby field.
 	user.DefaultHobby = userDescHobby.Default.(string)
 	// userDescLang is the schema descriptor for lang field.
-	userDescLang := userFields[4].Descriptor()
+	userDescLang := userFields[5].Descriptor()
 	// user.DefaultLang holds the default value on creation for the lang field.
 	user.DefaultLang = userDescLang.Default.(string)
 	// userDescGithub is the schema descriptor for github field.
-	userDescGithub := userFields[5].Descriptor()
+	userDescGithub := userFields[6].Descriptor()
 	// user.DefaultGithub holds the default value on creation for the github field.
 	user.DefaultGithub = userDescGithub.Default.(string)
 	// userDescGitlab is the schema descriptor for gitlab field.
-	userDescGitlab := userFields[6].Descriptor()
+	userDescGitlab := userFields[7].Descriptor()
 	// user.DefaultGitlab holds the default value on creation for the gitlab field.
 	user.DefaultGitlab = userDescGitlab.Default.(string)
 }

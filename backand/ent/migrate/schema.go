@@ -55,8 +55,9 @@ var (
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
-		{Name: "password", Type: field.TypeString, Default: "unknown"},
 		{Name: "age", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
+		{Name: "email", Type: field.TypeString, Default: "unknown"},
+		{Name: "googlenum", Type: field.TypeString, Default: ""},
 		{Name: "hobby", Type: field.TypeString, Default: "unknown"},
 		{Name: "lang", Type: field.TypeString, Default: "unknown"},
 		{Name: "github", Type: field.TypeString, Default: "unknown"},
