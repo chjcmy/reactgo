@@ -58,7 +58,7 @@ func Login(c echo.Context) error {
 	ctx := context.Background()
 	err := client.User.Query().
 		Where(user.Googlenum(nums.Num)).
-		Select(user.FieldName).
+		Select(user.FieldID).
 		Scan(ctx, &userName)
 	if err != nil {
 		log.Println(err)
