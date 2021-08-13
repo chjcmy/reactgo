@@ -41,7 +41,7 @@ const Home: FC = () => {
                         <p className="title title-font" style={{fontSize: "x-large"}}>
                             {newbook.edges.unitid.content_name}
                         </p>
-                        <Link href={`/book/${newbook.id}`}>{newbook.subject}</Link>
+                        <Link href={`/book/${newbook.id}`}>{newbook.title}</Link>
                     </div>
                 ))}
             </NewBooks>
