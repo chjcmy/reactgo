@@ -11,6 +11,7 @@
     "@types/node": "12.20.14",
     "@types/react": "17.0.9",
     "@types/react-dom": "17.0.6",
+    "@types/react-redux": "7.1.18",
     "axios": "0.21.1",
     "classnames": "2.3.1",
     "nes.css": "2.3.0",
@@ -20,10 +21,14 @@
     "react-google-login": "5.2.2",
     "react-icons": "4.2.0",
     "react-is": "16.13.1",
+    "react-redux": "7.2.4",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
+    "redux": "4.1.1",
     "retro-ui": "0.0.14",
     "styled-components": "5.3.0",
+    "suneditor": "2.41.3",
+    "suneditor-react": "3.3.0",
     "typescript": "4.3.2",
     "web-vitals": "1.1.2",
     "yarn": "1.22.11"
@@ -32,7 +37,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
+    "lint:fix": "eslint --fix './src/**/*.{ts,tsx,js,jsx}'"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +62,9 @@
   "devDependencies": {
     "@types/react-router-dom": "5.1.8",
     "@types/styled-components": "5.1.12",
+    "@typescript-eslint/eslint-plugin": "4.29.1",
+    "@typescript-eslint/parser": "4.29.1",
+    "eslint": "7.32.0",
     "typescript-plugin-css-modules": "3.4.0"
   }
 }

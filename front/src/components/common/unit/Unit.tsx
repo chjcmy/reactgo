@@ -19,9 +19,9 @@ const Unit = ({match} : {match: any}) => {
 
     useEffect(() => {
        if (!match.params.unit) {
-           findAllBook()
+           findAllBook().then()
        } else {
-           findUnitBook()
+           findUnitBook().then()
        }
     }, [match.params.unit]);
 
