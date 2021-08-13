@@ -50,7 +50,7 @@ func Remake(c echo.Context) error {
 
 func Login(c echo.Context) error {
 	var userName []struct {
-		Name string `json:"name"`
+		Id string `json:"id"`
 	}
 	client := db.Config()
 	nums := &googleNum{}
