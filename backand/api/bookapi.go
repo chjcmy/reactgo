@@ -16,10 +16,10 @@ import (
 
 type (
 	bookmaker struct {
+		Unit    int    `json:"unit" `
 		Title   string `json:"title"`
 		Subject string `json:"subject"`
-		Units   int    `json:"units"`
-		User    int    `json:"user"`
+		ID      int    `header:"id"`
 	}
 	bookplate struct {
 		Title   string `json:"title"`
@@ -30,12 +30,18 @@ type (
 func BookCreate(c echo.Context) error {
 	client := db.Config()
 	booking := &bookmaker{}
+	req := c.Request()
+	headers := req.Header
+	id := headers.Get("id")
+	fmt.Println(id)
 	c.Bind(booking)
+	booking.ID, _ = strconv.Atoi(id)
+	fmt.Println(booking.Title, booking.Subject, booking.ID, booking.Unit)
 	ctx := context.Background()
 	cr, err := client.Book.Create().
 		SetTitle(booking.Title).
-		SetUnitidID(booking.Units).
-		SetUseridID(booking.User).
+		SetUnitidID(booking.Unit).
+		SetUseridID(booking.ID).
 		SetSubject(booking.Subject).
 		Save(ctx)
 	if err != nil {

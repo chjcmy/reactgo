@@ -28,7 +28,7 @@ const Home: FC = () => {
     };
 
     useEffect(() => {
-        findNewBooks().then(r => console.log(r));
+        findNewBooks().then();
     }, []);
 
     return (

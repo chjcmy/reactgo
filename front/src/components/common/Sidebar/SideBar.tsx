@@ -6,7 +6,7 @@ import {IconContext} from "react-icons";
 import {AiOutlineClose, AiOutlineMenu} from "react-icons/all";
 
 import "./SideBar.css"
-import Login from "../Login/Login";
+import {GoogleLogin} from "react-google-login";
 
 
 const Nav = styled.div`
@@ -70,13 +70,32 @@ const LogoLink = styled(Link)`
   }
 `;
 
+const MakeLink = styled(Link)`
+  font-family: Neodgm, serif;
+  color: #ffffff;
+`;
 
 const SideBar: FC = () => {
 
     const [sidebar, setSidebar] = useState(false);
-    const [login, setLogin] = useState(false);
+    const [login, setLogin] = useState<boolean>(!!localStorage.getItem('id'));
     const showSidebar = () => setSidebar(!sidebar)
     const [units, setUnits] = useState<any[]>([]);
+
+    const responseGoogle = async (response: any) => {
+        console.log(response);
+        const res = await instance.post('/login', {
+            num: response.Ts.mS
+        })
+
+        if(res.data == null) {
+            console.log("error")
+        } else {
+            window.localStorage.setItem('id', res.data[0].id);
+            setLogin(true)
+        }
+    }
+
 
     const findUnits = async () => {
         await instance.get('/unitshosting').then(
@@ -91,14 +110,13 @@ const SideBar: FC = () => {
     };
 
     const logout = () => {
-        localStorage.removeItem('name');
+        localStorage.removeItem('id');
+        setLogin(false)
     };
-
 
     useEffect(() => {
         findUnits()
     }, [])
-
 
     return (
         <IconContext.Provider value={{color: '#fff'}}>
@@ -125,33 +143,45 @@ const SideBar: FC = () => {
                             </SidebarLink>
                         )
                     )}
-                    {
-                        !login
-                            ?
-                            <Login/>
-                            :
-                            <>
-                                <
-                                    button
-                                    type="button"
-                                    className="nes-btn is-success"
-                                    style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
+                    <div>
+                        {!login ? <GoogleLogin
+                            clientId={"940522265963-gqbtd1jmbqtsueje1hhfqved273412i7.apps.googleusercontent.com"}
+                            buttonText="Google"
+                            render={renderProps => (
+                                <a
+                                    className="nes-btn"
+                                    href="#"
+                                    onClick={renderProps.onClick}
+                                    style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "xx-large"}}
                                 >
-                                    make
-                                </button>
-                                <
-                                    button
-                                    type="button"
-                                    className="nes-btn is-error"
-                                    style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
-                                    onClick={logout}
-
-                                >
-                                    logout
-                                </button>
-
-                            </>
-                    }
+                                    Login
+                                </a>
+                            )}
+                            onSuccess={responseGoogle}
+                            onFailure={responseGoogle}
+                        /> : <>
+                        <MakeLink to={'/bookwrite'}>
+                            <
+                                button
+                                type="button"
+                                className="nes-btn is-success"
+                                style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
+                                onClick={showSidebar}
+                            >
+                                write
+                            </button>
+                        </MakeLink>
+                            <
+                                button
+                                type="button"
+                                className="nes-btn is-error"
+                                style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
+                                onClick={logout}
+                            >
+                                logout
+                            </button>
+                        </>}
+                    </div>
                 </SidebarWrap>
             </SidebarNav>
         </IconContext.Provider>

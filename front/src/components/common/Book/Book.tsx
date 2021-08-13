@@ -13,15 +13,11 @@ const Book = ({match} : {match: any}) => {
     const findBook = async () => {
         const res = await instance.get(`/bookread/${match.params.id}`)
         setBook(res.data)
-        console.log(book)
     };
 
     useEffect(() => {
-            findBook()
+            findBook().then();
         console.log(book)
-    }, [match.params.unit]);
-
-    useEffect(() => {
     }, [match.params.unit]);
 
     return (
