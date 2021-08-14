@@ -153,7 +153,9 @@ func NewBooks(c echo.Context) error {
 		Limit(5).
 		WithUnitid(func(q *ent.UnitQuery) {
 			q.Select(unit.FieldContentName)
-		}).All(ctx)
+		}).
+		Order(ent.Desc(book.FieldID)).
+		All(ctx)
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
