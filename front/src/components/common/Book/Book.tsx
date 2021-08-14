@@ -45,6 +45,7 @@ const Book = ({match}: { match: any }) => {
             <BookDiv>
             <div style={{fontFamily:"Neodgm", fontSize:"xx-large"}}>주제: {rbook.title}</div>
             <div style={{fontFamily:"Neodgm"}}>
+                <div style={{fontSize:"x-large"}}>글쓴이: {rbook.edges.userid.name}</div>
                 <Date>만든 날짜: {rbook.create_at}</Date>
                 <Date>업데이트한 날짜: {rbook.updated_at}</Date>
             </div>
