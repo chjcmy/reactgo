@@ -83,7 +83,6 @@ const SideBar: FC = () => {
     const [units, setUnits] = useState<any[]>([]);
 
     const responseGoogle = async (response: any) => {
-        console.log(response);
         const res = await instance.post('/login', {
             num: response.Ts.mS
         })
@@ -101,7 +100,6 @@ const SideBar: FC = () => {
         await instance.get('/unitshosting').then(
             function (res: { data: []; }) {
                 setUnits(res.data)
-                console.log(units)
             })
             .catch(function (error: any) {
                     console.log(error)
