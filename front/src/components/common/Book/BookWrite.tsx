@@ -5,14 +5,7 @@ import SunEditor from "suneditor-react";
 import 'suneditor/dist/css/suneditor.min.css';
 import plugins from 'suneditor/src/plugins'
 import {Link} from "react-router-dom";
-import axios from "axios";
 import {FormControl, InputLabel, makeStyles, MenuItem, Select} from "@material-ui/core";
-
-const Subject = styled.div`
-  margin-top: 2%;
-  font-family: Neodgm, serif;
-  color: #000000;
-`;
 
 const Outer = styled.div`
   position: inherit;
@@ -69,7 +62,7 @@ const BookWrite: FC = () => {
 
     const createBook = async () => {
         console.log(chapter,title,subject);
-        await axios.post('http://localhost:8000/bookcreate', {
+        await instance.post('/bookcreate', {
             unit: chapter,
             title: title,
             subject: subject,
@@ -143,7 +136,6 @@ const BookWrite: FC = () => {
                 <input type="text" id="name_field" className="nes-input" style={{width: "90%", height: "50%"}}
                        onChange={e => setTitle(e.target.value)}/>
             </div>
-            {/* eslint-disable-next-line @typescript-eslint/no-unused-expressions */}
             <SunEditor onChange={content => {setSubject(content), setRead(true), click}} setOptions={{
                 plugins: plugins,
                 buttonList: [['undo', 'redo'],

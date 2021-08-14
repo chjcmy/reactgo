@@ -61,6 +61,9 @@ func BookRead(c echo.Context) error {
 		WithUserid(func(q *ent.UserQuery) {
 			q.Select(user.FieldName)
 		}).
+		WithUnitid(func(q *ent.UnitQuery) {
+			q.Select(unit.FieldContentName)
+		}).
 		Only(ctx)
 	if err != nil {
 		log.Println(err)
