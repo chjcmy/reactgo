@@ -69,7 +69,7 @@ const BookWrite: FC = () => {
 
     const createBook = async () => {
         console.log(chapter,title,subject);
-        await axios.post('http://localhost:8000/bookcreate', {
+        await instance.post('/bookcreate', {
             unit: chapter,
             title: title,
             subject: subject,
