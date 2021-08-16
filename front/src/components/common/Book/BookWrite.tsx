@@ -1,11 +1,10 @@
 import React, {FC, useEffect, useState} from 'react';
-import {instance} from "../../../axios";
-import styled from "styled-components";
-import SunEditor from "suneditor-react";
-import 'suneditor/dist/css/suneditor.min.css';
-import plugins from 'suneditor/src/plugins'
-import {Link} from "react-router-dom";
+import {instance} from '../../../axios';
+import styled from 'styled-components';
+import {Link} from 'react-router-dom';
 import {FormControl, InputLabel, makeStyles, MenuItem, Select} from "@material-ui/core";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 const Outer = styled.div`
   position: inherit;
@@ -35,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
 const BookWrite: FC = () => {
 
     const classes = useStyles();
@@ -46,7 +44,6 @@ const BookWrite: FC = () => {
     const [title, setTitle] = useState('');
     const [subject, setSubject] = useState('');
     const [open, setOpen] = React.useState(false);
-
 
     const findUnits = async () => {
         await instance.get('/unitshosting').then(
@@ -99,6 +96,25 @@ const BookWrite: FC = () => {
         setChapter(event.target.value);
     };
 
+    const modules = {
+        toolbar: [
+            [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+            [{size: []}],
+            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+            [{'list': 'ordered'}, {'list': 'bullet'},
+                {'indent': '-1'}, {'indent': '+1'}],
+            ['link', 'image', 'video', 'code-block'],
+            ['clean']
+        ],
+        clipboard: {
+            // toggle to add extra line breaks when pasting HTML:
+            matchVisual: false,
+        },
+        imageResize: {
+            displaySize: true
+        },
+    }
+
     return <>
         <Outer>
             <Creator>
@@ -136,23 +152,7 @@ const BookWrite: FC = () => {
                 <input type="text" id="name_field" className="nes-input" style={{width: "90%", height: "50%"}}
                        onChange={e => setTitle(e.target.value)}/>
             </div>
-            <SunEditor onChange={content => {setSubject(content), setRead(true), click}} setOptions={{
-                plugins: plugins,
-                buttonList: [['undo', 'redo'],
-                    ['font', 'fontSize', 'formatBlock'],
-                    ['paragraphStyle', 'blockquote'],
-                    ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
-                    ['fontColor', 'hiliteColor', 'textStyle'],
-                    ['removeFormat'],
-                    '/',
-                    ['outdent', 'indent'],
-                    ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    ['table', 'link', 'image', 'video', 'audio'],
-                    ['fullScreen', 'showBlocks', 'codeView'],
-                    ['preview', 'print'],
-                    ['save', 'template']
-                ]
-            }}/>
+            <ReactQuill style={{width:"120%"}} modules={modules} theme="snow" value={subject} onChange={content => setSubject(content)}/>
         </Outer>
     </>;
 };
