@@ -1,32 +1,27 @@
-import React, {FC, useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
-import {Link} from "react-router-dom";
-import {instance} from "../../../axios";
-import {IconContext} from "react-icons";
-import {AiOutlineClose, AiOutlineMenu} from "react-icons/all";
+import { Link } from "react-router-dom";
+import { instance } from "../../axios";
+import { IconContext } from "react-icons";
+import { AiOutlineClose, AiOutlineMenu } from "react-icons/all";
+import { GoogleLogin } from "react-google-login";
 
-import "./SideBar.css"
-import {GoogleLogin} from "react-google-login";
-
-
-const Nav = styled.div`
+const Nav = styled.div `
   display: flex;
   justify-content: flex-start;
   align-content: center;
   height: 5rem;
   background-color: #8FB399;
 `;
-
-const SidebarNav = styled.div<{ sidebar: boolean }>`
+const SidebarNav = styled.div `
   width: 20rem;
   height: 100vh;
   background-color: #8FB399;
   position: fixed;
   top: 0;
-  left: ${({sidebar}) => (sidebar ? '0' : '-100%')};
+  left: ${({ sidebar }) => (sidebar ? '0' : '-100%')};
 `;
-
-const NavIcon = styled(Link)`
+const NavIcon = styled(Link) `
   display: flex;
   margin-top: 1.5rem;
   justify-content: flex-start;
@@ -35,11 +30,9 @@ const NavIcon = styled(Link)`
   height: 5rem;
   margin-left: 2rem;
 `;
-
-const SidebarWrap = styled.div`
+const SidebarWrap = styled.div `
 `;
-
-const SidebarLink = styled(Link)`
+const SidebarLink = styled(Link) `
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,9 +46,8 @@ const SidebarLink = styled(Link)`
   :active {
     color: black;
   }
-`
-
-const LogoLink = styled(Link)`
+`;
+const LogoLink = styled(Link) `
   align-items: center;
   display: flex;
   justify-content: center;
@@ -69,52 +61,47 @@ const LogoLink = styled(Link)`
     color: black;
   }
 `;
-
-const MakeLink = styled(Link)`
+const MakeLink = styled(Link) `
   font-family: Neodgm, serif;
   color: #ffffff;
 `;
 
-const SideBar: FC = () => {
-
+const SideBar = () => {
     const [sidebar, setSidebar] = useState(false);
-    const [login, setLogin] = useState<boolean>(!!localStorage.getItem('id'));
-    const showSidebar = () => setSidebar(!sidebar)
-    const [units, setUnits] = useState<any[]>([]);
+    const [login, setLogin] = useState(!!localStorage.getItem('id'));
+    const showSidebar = () => setSidebar(!sidebar);
+    const [units, setUnits] = useState([]);
 
-    const responseGoogle = async (response: any) => {
+    const responseGoogle = async (response) => {
         const res = await instance.post('/login', {
             num: response.Ts.mS
-        })
-
-        if(res.data == null) {
-            console.log("error")
-        } else {
-            window.localStorage.setItem('id', res.data[0].id);
-            setLogin(true)
+        });
+        if (res.data == null) {
+            console.log("error");
         }
-    }
-
+        else {
+            window.localStorage.setItem('id', res.data[0].id);
+            setLogin(true);
+        }
+    };
 
     const findUnits = async () => {
-        await instance.get('/unitshosting').then(
-            function (res: { data: []; }) {
-                setUnits(res.data)
-            })
-            .catch(function (error: any) {
-                    console.log(error)
-                }
-            );
+        await instance.get('/unitshosting').then(function (res) {
+            setUnits(res.data);
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
     };
 
     const logout = () => {
         localStorage.removeItem('id');
-        setLogin(false)
+        setLogin(false);
     };
 
     useEffect(() => {
-        findUnits()
-    }, [])
+        findUnits();
+    }, []);
 
     return (
         <IconContext.Provider value={{color: '#fff'}}>
@@ -158,17 +145,17 @@ const SideBar: FC = () => {
                             onSuccess={responseGoogle}
                             onFailure={responseGoogle}
                         /> : <>
-                        <MakeLink to={'/bookwrite'}>
-                            <
-                                button
-                                type="button"
-                                className="nes-btn is-success"
-                                style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
-                                onClick={showSidebar}
-                            >
-                                write
-                            </button>
-                        </MakeLink>
+                            <MakeLink to={'/bookwrite'}>
+                                <
+                                    button
+                                    type="button"
+                                    className="nes-btn is-success"
+                                    style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
+                                    onClick={showSidebar}
+                                >
+                                    write
+                                </button>
+                            </MakeLink>
                             <
                                 button
                                 type="button"
@@ -184,7 +171,7 @@ const SideBar: FC = () => {
             </SidebarNav>
         </IconContext.Provider>
     );
-
 };
 
 export default SideBar
+

@@ -12,7 +12,7 @@ services:
             - 8000
     frontend:
       build:
-        context: ./front/
+        context: ./frontend/
         dockerfile: dockerfile 
       volumes:
         - /app/node_modules

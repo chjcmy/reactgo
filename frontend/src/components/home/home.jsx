@@ -1,36 +1,25 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
-import {instance} from "../../../axios";
 import "nes.css/css/nes.min.css";
-import "./Home.css"
-import {Link} from "@material-ui/core";
-
-const NewBooks = styled.div`
+import {instance} from "../../axios";
+import { Link } from "@material-ui/core";
+const NewBooks = styled.div `
   margin: auto;
   text-align: center;
   align-items: center;
   font-size: 80%;
   font-family: Neodgm, serif;
 `;
-
-const Home: FC = () => {
-
-    const [newBooks, setNewBooks] = useState<any[]>([]);
-
+const Home = () => {
+    const [newBooks, setNewBooks] = useState([]);
     const findNewBooks = async () => {
-        const res = await instance.get('/newbooks')
-            .catch(function (error: any) {
-                    console.log(error)
-                }
-            );
-        setNewBooks(res.data)
-        console.log(newBooks)
+        const res = await instance.get('/newbooks');
+        setNewBooks(res.data);
+        console.log(newBooks);
     };
-
     useEffect(() => {
         findNewBooks().then();
     }, []);
-
     return (
         <>
             <NewBooks>
@@ -48,5 +37,4 @@ const Home: FC = () => {
         </>
     );
 };
-
 export default Home;
