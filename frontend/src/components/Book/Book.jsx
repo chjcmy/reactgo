@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "nes.css/css/nes.min.css";
 import { instance } from "../../axios";
 import styled from "styled-components";
+import "./ckcontent.css"
 
 const BookDiv = styled.div `
   margin: 2% 2% 2% 2%;
@@ -26,7 +27,7 @@ const Book = ({ match }) => {
     const findBook = async () => {
         const res = await instance.get(`/bookread/${match.params.id}`);
         setRbook(res.data);
-        console.log(rbook);
+        console.log(res.data);
     };
     useEffect(() => {
         findBook().then(() => console.log(rbook));
@@ -42,6 +43,10 @@ const Book = ({ match }) => {
                     <Date>만든 날짜: {rbook.create_at}</Date>
                     <Date>업데이트한 날짜: {rbook.updated_at}</Date>
                 </div>
+                <div
+    className="ck-content"
+    dangerouslySetInnerHTML={{__html: rbook.subject}}
+    />
             </BookDiv>
         </>
     );
