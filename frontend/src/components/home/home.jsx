@@ -26,7 +26,7 @@ const Home = () => {
                 <h1>최신글</h1>
                 {newBooks.map(newbook => (
                     <div className="nes-container with-title is-centered"
-                         style={{position: "inherit", marginBlock: "20%"}} key={newbook.id}>
+                         style={{position: "inherit", marginBlock: "5%"}} key={newbook.id}>
                         <p className="title title-font" style={{fontSize: "x-large"}}>
                             {newbook.edges.unitid.content_name}
                         </p>
