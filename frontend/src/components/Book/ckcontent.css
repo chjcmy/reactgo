@@ -18,6 +18,13 @@
 position: inherit !important;
 }
 
+.ck.ck-editor__editable pre {
+    position: inherit !important;
+}
+.ck .ck-widget, .ck .ck-widget.ck-widget_with-selection-handle {
+    position: inherit !important;
+}
+
 .ck-content {
     word-break: break-all;
     font-size: 20px;
