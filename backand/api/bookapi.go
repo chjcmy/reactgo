@@ -132,15 +132,16 @@ func PickUnitBook(c echo.Context) error {
 	ctx := context.Background()
 	fmt.Println(id)
 	r, err := client.Book.Query().
+		Select(book.FieldID, book.FieldUpdatedAt, book.FieldCreateAt, book.FieldTitle).
 		Where(
 			book.HasUnitidWith(
 				unit.ID(id),
 			)).
 		WithUnitid(func(q *ent.UnitQuery) {
-			q.Select(unit.FieldID)
+			q.Select(unit.FieldID, unit.FieldContentName)
 		}).
-		WithUnitid(func(q *ent.UnitQuery) {
-			q.Select(unit.FieldContentName)
+		WithUserid(func(q *ent.UserQuery) {
+			q.Select(user.FieldName)
 		}).
 		Limit(10).
 		Offset(num).
