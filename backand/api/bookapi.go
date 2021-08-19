@@ -139,6 +139,9 @@ func PickUnitBook(c echo.Context) error {
 		WithUnitid(func(q *ent.UnitQuery) {
 			q.Select(unit.FieldID)
 		}).
+		WithUnitid(func(q *ent.UnitQuery) {
+			q.Select(unit.FieldContentName)
+		}).
 		Limit(10).
 		Offset(num).
 		All(ctx)
