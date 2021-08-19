@@ -80,6 +80,9 @@ func BookShow(c echo.Context) error {
 		WithUserid(func(q *ent.UserQuery) {
 			q.Select(user.FieldName)
 		}).
+		WithUnitid(func(q *ent.UnitQuery) {
+			q.Select(unit.FieldContentName)
+		}).
 		Limit(10).
 		Offset(num).
 		All(ctx)
