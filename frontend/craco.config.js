@@ -3,8 +3,9 @@ const { styles } = require("@ckeditor/ckeditor5-dev-utils");
 
 module.exports = {
     webpack: {
+
         configure: (config, { env, paths }) => {
-            config.plugins.push(new CKEditorWebpackPlugin({ language: "en", addMainLanguageTranslationsToAllAssets: true}));
+            config.plugins.push(new CKEditorWebpackPlugin({ language: "ko", addMainLanguageTranslationsToAllAssets: true}));
 
             const regExpThemeIconSvg = /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/;
             const regExpThemeCss = /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css/;
@@ -55,6 +56,8 @@ module.exports = {
                     });
                 }
             });
+
+
 
             return config;
         },

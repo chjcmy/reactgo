@@ -12,7 +12,7 @@ body {
 
 .overview {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
   font-size: 3rem;
   color: #000000;
