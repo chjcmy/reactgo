@@ -52,7 +52,6 @@ func main() {
 
 	e.POST("/users", createUser)
 	e.POST("/remake", api.Remake)
-	e.GET("/gogo", api.Hello)
 	e.GET("/hosting", api.Hosting)
 	e.POST("/unittest", api.UnitCreate)
 	e.GET("/unitshosting", api.UnitHosting)
