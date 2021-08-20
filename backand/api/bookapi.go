@@ -169,3 +169,7 @@ func NewBooks(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, r)
 }
+
+func Hello(c echo.Context) error {
+	return c.JSON(http.StatusOK, "hellow")
+}
