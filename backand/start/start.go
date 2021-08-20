@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	client, err := ent.Open("mysql", "cshcmi:chltjdgus123!@tcp(192.168.0.8:1994)/blog?charset=utf8mb4&parseTime=True&loc=Local")
+	client, err := ent.Open("mysql", "cshcmi:chltjdgus123!@tcp(choi1994.iptime.org:1994)/blog?charset=utf8mb4&parseTime=True&loc=Local")
 	if err != nil {
 		log.Fatalf("failed connecting to mysql: %v", err)
 	}
