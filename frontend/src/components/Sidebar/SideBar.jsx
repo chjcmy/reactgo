@@ -14,7 +14,7 @@ const Nav = styled.div `
   background-color: #8FB399;
 `;
 const SidebarNav = styled.div `
-  width: 20rem;
+  width: 16rem;
   height: 100vh;
   background-color: #8FB399;
   position: fixed;
@@ -37,7 +37,7 @@ const SidebarLink = styled(Link) `
   justify-content: space-between;
   align-items: center;
   height: 2rem;
-  font-size: 3rem;
+  font-size: 2rem;
   padding: 2rem;
   text-decoration: none;
   font-family: Neodgm, serif;

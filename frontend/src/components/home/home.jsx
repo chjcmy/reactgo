@@ -4,8 +4,9 @@ import "nes.css/css/nes.min.css";
 import {instance} from "../../axios";
 import { Link } from "@material-ui/core";
 const NewBooks = styled.div `
-  margin: auto;
+  margin-top: 5%;
   text-align: center;
+  justify-content: flex-start, !important;
   align-items: center;
   font-size: 80%;
   font-family: Neodgm, serif;
