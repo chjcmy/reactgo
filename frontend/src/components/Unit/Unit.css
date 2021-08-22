@@ -10,3 +10,7 @@
 .ui.celled.grid>.row {
     position: inherit;
 }
+
+.ui.secondary.button {
+    font-family: Neodgm, serif;
+}

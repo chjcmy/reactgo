@@ -14,9 +14,6 @@ const FamilyFont = styled.div`
   font-family: Neodgm, serif;
 `;
 
-const Column = styled(Grid.Column)`
-`;
-
 const ImgCk = (unit) => {
     switch (unit) {
         case 1 :
@@ -41,7 +38,6 @@ const ImgCk = (unit) => {
 
 const Unit = ({match}) => {
 
-    const [login, setLogin] = useState(!!localStorage.getItem('id'));
     const [books, setBooks] = useState([]);
 
     const findAllBook = async () => {
@@ -85,6 +81,21 @@ const Unit = ({match}) => {
                                             <Card.Description style={{fontSize: "xxx-large"}}>
                                                 {book.title}
                                             </Card.Description>
+                                    <Button inverted color='olive' size='big'>
+                                        보기
+                                    </Button>
+                                    { localStorage.getItem('id') === '1' ?
+                                        <>
+                                        <Button inverted color='yellow'>
+                                            업데이트
+                                        </Button>
+                                        <Button inverted color='red'>
+                                        삭제
+                                        </Button>
+                                        </>
+                                        :
+                                        null
+                                    }
                                 </Grid.Column>
                             </Grid.Row>
                             )
