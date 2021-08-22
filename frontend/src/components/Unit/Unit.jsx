@@ -3,6 +3,12 @@ import {instance} from "../../axios";
 import styled from "styled-components";
 import {makeStyles} from '@material-ui/core/styles';
 import {Button, Card, Image} from 'semantic-ui-react'
+import Server from '../../img/server.gif'
+import Golang from '../../img/golang.gif'
+import Js from '../../img/js.gif'
+import Db from '../../img/db.gif'
+import Life from '../../img/life.gif'
+
 
 import Grid from '@material-ui/core/Grid';
 
@@ -10,33 +16,22 @@ const FamilyFont = styled.div`
   font-family: Neodgm, serif;
 `;
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    paper: {
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
-}));
-
 const ImgCk = (unitid) => {
     switch (unitid) {
         case 1 :
-            return "https://media1.giphy.com/media/MCRLiCTdFtKYsF1xOb/giphy.gif?cid=ecf05e47m17bngd5zk6tk6hxcv6zublos400em0wnujy2va1&rid=giphy.gif&ct=g"
+            return Golang
 
         case 2 :
-            return "https://media0.giphy.com/media/fuJPZBIIqzbt1kAYVc/giphy.gif?cid=ecf05e47a6aka78ap4znwlsxkhsssw3n08ad1413soxbsc5z&rid=giphy.gif&ct=g"
+            return Js
 
         case 3 :
-            return "https://media3.giphy.com/media/XsHkc4MCBXDn0yNybG/giphy.gif?cid=ecf05e47t53tpe7oz4fdbwe2f9wlp8nndofn0hds0adjlus0&rid=giphy.gif&ct=g"
+            return Db
 
         case 4 :
-            return "https://media0.giphy.com/media/GbH8vRmrNHdVZhouBt/giphy.gif?cid=790b761125661d20b636c1f65db78b00891724e42a74254a&rid=giphy.gif&ct=g"
+            return Server
 
         case 5 :
-            return "https://media1.giphy.com/media/17XAjPucc8Qda/giphy.gif?cid=ecf05e47acbjnzaliu1tjp1prqkmbwddng7zwd1aeyr1xjrm&rid=giphy.gif&ct=g"
+            return Life
     }
 }
 
@@ -76,7 +71,7 @@ const Unit = ({match}) => {
                           alignItems="center">
                         {books.map((book, idx) => (
                                 <Grid item xs={6}>
-                                    <div className="nes-container with-title" style={{position: "inherit", margin: "5%"}}>
+                                    <div id={idx} className="nes-container with-title" style={{position: "inherit", margin: "5%"}}>
                                         <p className="title"
                                            style={{fontSize: "xx-large"}}>{book.edges.unitid.content_name}</p>
                                         <Card.Content>
@@ -97,14 +92,6 @@ const Unit = ({match}) => {
                                             </Card.Description>
                                         </Card.Content>
                                         <Card.Content extra>
-                                            <div className='ui two buttons'>
-                                                <Button basic color='green'>
-                                                    Approve
-                                                </Button>
-                                                <Button basic color='red'>
-                                                    Decline
-                                                </Button>
-                                            </div>
                                         </Card.Content>
                                     </div>
                                 </Grid>
