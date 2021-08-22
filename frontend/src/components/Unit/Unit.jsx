@@ -1,23 +1,24 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect,  useState} from 'react';
 import {instance} from "../../axios";
 import styled from "styled-components";
-import {makeStyles} from '@material-ui/core/styles';
-import {Button, Card, Image} from 'semantic-ui-react'
+import {Card, Image, Grid, Button} from 'semantic-ui-react'
 import Server from '../../img/server.gif'
 import Golang from '../../img/golang.gif'
 import Js from '../../img/js.gif'
 import Db from '../../img/db.gif'
 import Life from '../../img/life.gif'
 
-
-import Grid from '@material-ui/core/Grid';
+import './Unit.css'
 
 const FamilyFont = styled.div`
   font-family: Neodgm, serif;
 `;
 
-const ImgCk = (unitid) => {
-    switch (unitid) {
+const Column = styled(Grid.Column)`
+`;
+
+const ImgCk = (unit) => {
+    switch (unit) {
         case 1 :
             return Golang
 
@@ -32,13 +33,13 @@ const ImgCk = (unitid) => {
 
         case 5 :
             return Life
+
+        default :
+            return null
     }
 }
 
-
 const Unit = ({match}) => {
-
-    useRef()
 
     const [login, setLogin] = useState(!!localStorage.getItem('id'));
     const [books, setBooks] = useState([]);
@@ -65,39 +66,29 @@ const Unit = ({match}) => {
     return (
         <div>
             <FamilyFont>
-                <Grid container spacing={1}>
-                    <Grid container direction="row"
-                          justifyContent="center"
-                          alignItems="center">
+                <Grid celled>
                         {books.map((book, idx) => (
-                                <Grid item xs={6}>
-                                    <div id={idx} className="nes-container with-title" style={{position: "inherit", margin: "5%"}}>
-                                        <p className="title"
-                                           style={{fontSize: "xx-large"}}>{book.edges.unitid.content_name}</p>
-                                        <Card.Content>
-                                            <Image
-                                                floated='right'
-                                                size='small'
-                                                src={ImgCk(book.edges.unitid.id)}
-                                                style={{position: "inherit"}}
-                                            />
-                                            <Card.Meta style={{fontSize: "large"}}>만든 날짜</Card.Meta>
-                                            <Card.Meta style={{fontSize: "large"}}>{book.create_at}</Card.Meta>
-                                            <Card.Meta style={{fontSize: "large"}}>업데이트된 날짜</Card.Meta>
-                                            <Card.Meta style={{fontSize: "large"}}>{book.updated_at}</Card.Meta>
+                            <Grid.Row key={idx}>
+                                <Grid.Column width={5}>
+                                    <Image
+                                        floated='left'
+                                        size='medium'
+                                        src={ImgCk(book.edges.unitid.id)}
+                                        style={{position: "inherit"}}
+                                    />
+                                </Grid.Column>
+                                <Grid.Column width={11}>
+                                            <Card.Meta style={{fontSize: "large"}}>만든 날짜: {book.create_at}</Card.Meta>
+                                            <Card.Meta style={{fontSize: "large"}}>업데이트된 날짜: {book.updated_at}</Card.Meta>
                                             <Card.Meta
                                                 style={{fontSize: "x-large"}}>글쓴이: {book.edges.userid.name}</Card.Meta>
-                                            <Card.Description style={{fontSize: "xx-large"}}>
+                                            <Card.Description style={{fontSize: "xxx-large"}}>
                                                 {book.title}
                                             </Card.Description>
-                                        </Card.Content>
-                                        <Card.Content extra>
-                                        </Card.Content>
-                                    </div>
-                                </Grid>
+                                </Grid.Column>
+                            </Grid.Row>
                             )
                         )}
-                    </Grid>
                 </Grid>
             </FamilyFont>
         </div>

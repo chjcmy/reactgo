@@ -1,0 +1,12 @@
+.ui.grid>.column:not(.row), .ui.grid>.row>.column {
+    position: inherit;
+    display: inline-block;
+    width: 6.25%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    vertical-align: top;
+}
+
+.ui.celled.grid>.row {
+    position: inherit;
+}
