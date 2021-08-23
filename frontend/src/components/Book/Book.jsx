@@ -32,6 +32,7 @@ import Indent from "@ckeditor/ckeditor5-indent/src/indent";
 import IndentBlock from "@ckeditor/ckeditor5-indent/src/indentblock";
 import Base64UploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter";
 import CodeBlock from "@ckeditor/ckeditor5-code-block/src/codeblock";
+import GoogleAdsense from "react-adsense-google";
 
 const editorConfiguration = {
     language: "ko",
@@ -139,13 +140,9 @@ const Book = ({ match }) => {
     return (
         <>
             <BookDiv>
-                <AdSense.Google
-                    client='ca-pub-7458640452724959'
-                    slot='7806394673'
-                    style={{ display: 'block' }}
-                    layout='in-article'
-                    format='fluid'
-                />
+                <GoogleAdsense
+                    adSlot='9876543210'
+                    adClient='ca-pub-7458640452724959'/>
                 <div style={{fontFamily:"Neodgm", fontSize:"xx-large"}}>주제: {rbook.title}</div>
                 <div style={{fontFamily:"Neodgm", }}>
                     <div style={{fontSize:"x-large"}}>글쓴이: {rbook.edges?.userid.name}</div>
