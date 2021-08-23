@@ -198,7 +198,7 @@ const BookWrite = () => {
         }, {
             headers: {
                 'Content-Type': 'application/json',
-                'id': localStorage.getItem("id")
+                'id': sessionStorage.getItem("id")
             }
         });
     };

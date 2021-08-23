@@ -1,20 +1,19 @@
 import React, {useEffect,  useState} from 'react';
+import {Link} from 'react-router-dom'
 import {instance} from "../../axios";
 import styled from "styled-components";
-import {Card, Image, Grid, Button} from 'semantic-ui-react'
+import {Card, Image, Grid, Button, Label} from 'semantic-ui-react'
 import Server from '../../img/server.gif'
 import Golang from '../../img/golang.gif'
 import Js from '../../img/js.gif'
 import Db from '../../img/db.gif'
 import Life from '../../img/life.gif'
+import Profile from '../../img/profile.jpg'
 
 import './Unit.css'
 
 const FamilyFont = styled.div`
   font-family: Neodgm, serif;
-`;
-
-const Column = styled(Grid.Column)`
 `;
 
 const ImgCk = (unit) => {
@@ -41,7 +40,6 @@ const ImgCk = (unit) => {
 
 const Unit = ({match}) => {
 
-    const [login, setLogin] = useState(!!localStorage.getItem('id'));
     const [books, setBooks] = useState([]);
 
     const findAllBook = async () => {
@@ -78,13 +76,32 @@ const Unit = ({match}) => {
                                     />
                                 </Grid.Column>
                                 <Grid.Column width={11}>
+                                    <Label image>
+                                        <img src={Profile} />
+                                        {book.edges.userid.name}
+                                    </Label>
                                             <Card.Meta style={{fontSize: "large"}}>만든 날짜: {book.create_at}</Card.Meta>
                                             <Card.Meta style={{fontSize: "large"}}>업데이트된 날짜: {book.updated_at}</Card.Meta>
-                                            <Card.Meta
-                                                style={{fontSize: "x-large"}}>글쓴이: {book.edges.userid.name}</Card.Meta>
                                             <Card.Description style={{fontSize: "xxx-large"}}>
                                                 {book.title}
                                             </Card.Description>
+                                    <Link to={`/book/${book.id}`}>
+                                    <Button inverted color='olive' size='big' floated={"left"}>
+                                        보기
+                                    </Button>
+                                    </Link>
+                                    { sessionStorage.getItem('id') === '1' ?
+                                        <>
+                                        <Button inverted color='yellow' size='big' floated={"left"}>
+                                            업데이트
+                                        </Button>
+                                        <Button inverted color='red' size='big' floated={"left"}>
+                                        삭제
+                                        </Button>
+                                        </>
+                                        :
+                                        null
+                                    }
                                 </Grid.Column>
                             </Grid.Row>
                             )

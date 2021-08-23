@@ -68,7 +68,7 @@ const MakeLink = styled(Link) `
 
 const SideBar = () => {
     const [sidebar, setSidebar] = useState(false);
-    const [login, setLogin] = useState(!!localStorage.getItem('id'));
+    const [login, setLogin] = useState(!!sessionStorage.getItem('id'));
     const showSidebar = () => setSidebar(!sidebar);
     const [units, setUnits] = useState([]);
 
@@ -80,7 +80,7 @@ const SideBar = () => {
             console.log("error");
         }
         else {
-            window.localStorage.setItem('id', res.data[0].id);
+            window.sessionStorage.setItem('id', res.data[0].id);
             setLogin(true);
         }
     };
