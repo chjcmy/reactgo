@@ -6,6 +6,7 @@ import Unit from "./components/Unit/Unit";
 import Book from "./components/Book/Book";
 import BookWrite from "./components/Book/BookWrite";
 import SideBar from "./components/Sidebar/SideBar";
+import BookUpdate from "./components/Book/BookUpdate";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/all" component={Unit} />
             <Route path="/book/:id" component={Book}/>
             <Route path="/bookwrite" component={BookWrite} />
+              <Route path="/bookupdate/:id" component={BookUpdate} />
           </Switch>
         </div>
       </Router>

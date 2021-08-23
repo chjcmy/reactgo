@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import "nes.css/css/nes.min.css";
+import {Link} from 'react-router-dom'
+import AdSense from 'react-adsense';
 import {instance} from "../../axios";
-import { Link } from "@material-ui/core";
 const NewBooks = styled.div `
   margin-top: 5%;
   text-align: center;
@@ -18,12 +19,17 @@ const Home = () => {
         setNewBooks(res.data);
         console.log(newBooks);
     };
+
     useEffect(() => {
         findNewBooks().then();
     }, []);
     return (
         <>
             <NewBooks>
+                <AdSense.Google
+                    client='ca-pub-7292810486004926'
+                    slot='7806394673'
+                />
                 <h1>최신글</h1>
                 {newBooks.map(newbook => (
                     <div className="nes-container with-title is-centered"

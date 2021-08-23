@@ -117,17 +117,11 @@ const BookDiv = styled.div `
   width: 100%;
   display: block;
 `;
-const BookText = styled.div `
-  margin: auto;
-  text-align: center;
-  align-items: center;
-  justify-content: flex-start;
-  display: flex;
-  height: 50%;
-`;
+
 const Date = styled.div `
   font-size: large;
 `;
+
 const Book = ({ match }) => {
 
     console.log(match.params.id);
@@ -138,7 +132,7 @@ const Book = ({ match }) => {
         console.log(res.data);
     };
     useEffect(() => {
-        findBook().then(() => console.log(rbook));
+        findBook().then();
     }, [match.params.unit]);
 
     return (
@@ -151,12 +145,7 @@ const Book = ({ match }) => {
                     <Date>만든 날짜: {rbook.create_at}</Date>
                     <Date>업데이트한 날짜: {rbook.updated_at}</Date>
                 </div>
-    {/*            <div*/}
-    {/*className="ck-content"*/}
-    {/*dangerouslySetInnerHTML={{__html: rbook.subject}}*/}
-    {/*/>*/}
                 <CKEditor
-                    s
                     editor={ ClassicEditor }
                     disabled={true}
                     config={ editorConfiguration }
