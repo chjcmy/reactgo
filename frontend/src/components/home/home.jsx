@@ -27,7 +27,7 @@ const Home = () => {
         <>
             <NewBooks>
                 <AdSense.Google
-                    client='ca-pub-7292810486004926'
+                    client='ca-pub-7458640452724959'
                     slot='7806394673'
                 />
                 <h1>최신글</h1>

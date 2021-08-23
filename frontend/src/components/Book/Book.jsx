@@ -4,6 +4,7 @@ import { instance } from "../../axios";
 import styled from "styled-components";
 import "./ckcontent.css"
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import AdSense from 'react-adsense';
 
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
@@ -138,6 +139,13 @@ const Book = ({ match }) => {
     return (
         <>
             <BookDiv>
+                <AdSense.Google
+                    client='ca-pub-7458640452724959'
+                    slot='7806394673'
+                    style={{ display: 'block' }}
+                    layout='in-article'
+                    format='fluid'
+                />
                 <div style={{fontFamily:"Neodgm", fontSize:"xx-large"}}>주제: {rbook.title}</div>
                 <div style={{fontFamily:"Neodgm", }}>
                     <div style={{fontSize:"x-large"}}>글쓴이: {rbook.edges?.userid.name}</div>
