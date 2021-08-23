@@ -13,6 +13,7 @@ const Nav = styled.div `
   height: 5rem;
   background-color: #8FB399;
 `;
+
 const SidebarNav = styled.div `
   width: 16rem;
   height: 100vh;
@@ -21,6 +22,7 @@ const SidebarNav = styled.div `
   top: 0;
   left: ${({ sidebar }) => (sidebar ? '0' : '-100%')};
 `;
+
 const NavIcon = styled(Link) `
   display: flex;
   margin-top: 1.5rem;
@@ -30,8 +32,10 @@ const NavIcon = styled(Link) `
   height: 5rem;
   margin-left: 2rem;
 `;
+
 const SidebarWrap = styled.div `
 `;
+
 const SidebarLink = styled(Link) `
   display: flex;
   justify-content: space-between;
@@ -47,6 +51,7 @@ const SidebarLink = styled(Link) `
     color: black;
   }
 `;
+
 const LogoLink = styled(Link) `
   align-items: center;
   display: flex;
@@ -61,6 +66,7 @@ const LogoLink = styled(Link) `
     color: black;
   }
 `;
+
 const MakeLink = styled(Link) `
   font-family: Neodgm, serif;
   color: #ffffff;

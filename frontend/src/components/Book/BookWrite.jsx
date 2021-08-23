@@ -189,6 +189,7 @@ const BookWrite = () => {
                 console.log(error);
             });
     };
+
     const createBook = async () => {
         console.log(chapter, title, subject);
         await instance.post('/bookcreate', {
@@ -212,12 +213,15 @@ const BookWrite = () => {
         console.log(chapter, title, subject);
         createBook().then();
     };
+
     const handleClose = () => {
         setOpen(false);
     };
+
     const handleOpen = () => {
         setOpen(true);
     };
+
     const handleChange = (event) => {
         setChapter(event.target.value);
     };
@@ -241,7 +245,7 @@ const BookWrite = () => {
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                {units.map(unit => <MenuItem value={unit.id}>{unit.content_name}</MenuItem>
+                                {units.map(unit => <MenuItem key={unit.id} value={unit.id}>{unit.content_name}</MenuItem>
                                 )}
                             </Select>
                         </FormControl>
