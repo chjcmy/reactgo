@@ -1,12 +1,14 @@
 import React, {useEffect,  useState} from 'react';
+import {Link} from 'react-router-dom'
 import {instance} from "../../axios";
 import styled from "styled-components";
-import {Card, Image, Grid, Button} from 'semantic-ui-react'
+import {Card, Image, Grid, Button, Label} from 'semantic-ui-react'
 import Server from '../../img/server.gif'
 import Golang from '../../img/golang.gif'
 import Js from '../../img/js.gif'
 import Db from '../../img/db.gif'
 import Life from '../../img/life.gif'
+import Profile from '../../img/profile.jpg'
 
 import './Unit.css'
 
@@ -74,22 +76,26 @@ const Unit = ({match}) => {
                                     />
                                 </Grid.Column>
                                 <Grid.Column width={11}>
+                                    <Label image>
+                                        <img src={Profile} />
+                                        {book.edges.userid.name}
+                                    </Label>
                                             <Card.Meta style={{fontSize: "large"}}>만든 날짜: {book.create_at}</Card.Meta>
                                             <Card.Meta style={{fontSize: "large"}}>업데이트된 날짜: {book.updated_at}</Card.Meta>
-                                            <Card.Meta
-                                                style={{fontSize: "x-large"}}>글쓴이: {book.edges.userid.name}</Card.Meta>
                                             <Card.Description style={{fontSize: "xxx-large"}}>
                                                 {book.title}
                                             </Card.Description>
-                                    <Button inverted color='olive' size='big'>
+                                    <Link to={`/book/${book.id}`}>
+                                    <Button inverted color='olive' size='big' floated={"left"}>
                                         보기
                                     </Button>
-                                    { localStorage.getItem('id') === '1' ?
+                                    </Link>
+                                    { sessionStorage.getItem('id') === '1' ?
                                         <>
-                                        <Button inverted color='yellow'>
+                                        <Button inverted color='yellow' size='big' floated={"left"}>
                                             업데이트
                                         </Button>
-                                        <Button inverted color='red'>
+                                        <Button inverted color='red' size='big' floated={"left"}>
                                         삭제
                                         </Button>
                                         </>

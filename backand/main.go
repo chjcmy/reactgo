@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	api "github.com/backand/api"
-
 	"github.com/backand/db"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"

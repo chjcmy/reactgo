@@ -14,3 +14,7 @@
 .ui.secondary.button {
     font-family: Neodgm, serif;
 }
+
+.button {
+    font-family: Neodgm, serif !important;
+}
