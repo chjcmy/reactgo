@@ -85,6 +85,7 @@ func BookShow(c echo.Context) error {
 		}).
 		Limit(10).
 		Offset(num).
+		Order(ent.Desc(book.FieldID)).
 		All(ctx)
 	if err != nil {
 		log.Println(err)
