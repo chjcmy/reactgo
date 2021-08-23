@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import "nes.css/css/nes.min.css";
 import {Link} from 'react-router-dom'
-import AdSense from 'react-adsense';
 import {instance} from "../../axios";
+import GoogleAdsense from "react-adsense-google";
 const NewBooks = styled.div `
   margin-top: 5%;
   text-align: center;
@@ -26,9 +26,9 @@ const Home = () => {
     return (
         <>
             <NewBooks>
-                <AdSense.Google
-                    client='ca-pub-7458640452724959'
-                    slot='7806394673'
+                <GoogleAdsense
+                    adClient='ca-pub-7458640452724959'
+                    adSlot='9876543210'
                 />
                 <h1>최신글</h1>
                 {newBooks.map(newbook => (
