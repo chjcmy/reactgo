@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
-import { instance } from "../../axios";
-import { IconContext } from "react-icons";
-import { AiOutlineClose, AiOutlineMenu } from "react-icons/all";
-import { GoogleLogin } from "react-google-login";
+import { Link } from 'react-router-dom';
+import { IconContext } from 'react-icons';
+import { AiOutlineClose, AiOutlineMenu } from 'react-icons/all';
+import { GoogleLogin } from 'react-google-login';
+import { instance } from '../../axios';
 
-const Nav = styled.div `
+const Nav = styled.div`
   display: flex;
   justify-content: flex-start;
   align-content: center;
   height: 5rem;
-  background-color: #8FB399;
+  background-color: #8fb399;
 `;
 
-const SidebarNav = styled.div `
+const SidebarNav = styled.div`
   width: 16rem;
   height: 100vh;
-  background-color: #8FB399;
+  background-color: #8fb399;
   position: fixed;
   top: 0;
   left: ${({ sidebar }) => (sidebar ? '0' : '-100%')};
 `;
 
-const NavIcon = styled(Link) `
+const NavIcon = styled(Link)`
   display: flex;
   margin-top: 1.5rem;
   justify-content: flex-start;
@@ -33,10 +33,9 @@ const NavIcon = styled(Link) `
   margin-left: 2rem;
 `;
 
-const SidebarWrap = styled.div `
-`;
+const SidebarWrap = styled.div``;
 
-const SidebarLink = styled(Link) `
+const SidebarLink = styled(Link)`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,7 +51,7 @@ const SidebarLink = styled(Link) `
   }
 `;
 
-const LogoLink = styled(Link) `
+const LogoLink = styled(Link)`
   align-items: center;
   display: flex;
   justify-content: center;
@@ -67,117 +66,131 @@ const LogoLink = styled(Link) `
   }
 `;
 
-const MakeLink = styled(Link) `
+const MakeLink = styled(Link)`
   font-family: Neodgm, serif;
   color: #ffffff;
 `;
 
 const SideBar = () => {
-    const [sidebar, setSidebar] = useState(false);
-    const [login, setLogin] = useState(!!sessionStorage.getItem('id'));
-    const showSidebar = () => setSidebar(!sidebar);
-    const [units, setUnits] = useState([]);
+  const [sidebar, setSidebar] = useState(false);
+  const [login, setLogin] = useState(!!sessionStorage.getItem('id'));
+  const showSidebar = () => setSidebar(!sidebar);
+  const [units, setUnits] = useState([]);
 
-    const responseGoogle = async (response) => {
-        const res = await instance.post('/login', {
-            num: response.Ts.mS
-        });
-        if (res.data == null) {
-            console.log("error");
-        }
-        else {
-            window.sessionStorage.setItem('id', res.data[0].googlenum);
-            setLogin(true);
-        }
-    };
+  const responseGoogle = async (response) => {
+    const res = await instance.post('/login', {
+      num: response.Ts.mS,
+    });
+    if (res.data != null) {
+      window.sessionStorage.setItem('id', res.data[0].googlenum);
+      setLogin(true);
+    }
+  };
 
-    const findUnits = async () => {
-        await instance.get('/unitshosting').then(function (res) {
-            setUnits(res.data);
-        })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
+  const findUnits = async () => {
+    await instance
+      .get('/unitshosting')
+      .then((res) => {
+        setUnits(res.data);
+      })
+      .catch(() => {});
+  };
 
-    const logout = () => {
-        localStorage.removeItem('id');
-        setLogin(false);
-    };
+  const logout = () => {
+    window.sessionStorage.removeItem('id');
+    setLogin(false);
+  };
 
-    useEffect(() => {
-        findUnits();
-    }, []);
+  useEffect(() => {
+    findUnits();
+  }, []);
 
-    return (
-        <IconContext.Provider value={{color: '#fff'}}>
-            <Nav>
-                <NavIcon to="#" onClick={showSidebar}>
-                    <AiOutlineMenu/>
-                </NavIcon>
-                <LogoLink to="/">Sung.Blog</LogoLink>
-            </Nav>
-            <SidebarNav sidebar={sidebar}>
-                <SidebarWrap>
-                    <NavIcon to="#" onClick={showSidebar}>
-                        <AiOutlineClose/>
-                    </NavIcon>
-                    <SidebarLink to={`/`} onClick={showSidebar}>
-                        Home
-                    </SidebarLink>
-                    <SidebarLink to={`/all`} onClick={showSidebar}>
-                        All
-                    </SidebarLink>
-                    {units.map(unit => (
-                            <SidebarLink key={unit.id} to={`/unit/${unit.id}`} onClick={showSidebar}>
-                                {unit.content_name}
-                            </SidebarLink>
-                        )
-                    )}
-                    <div>
-                        {!login ? <GoogleLogin
-                            clientId={"940522265963-gqbtd1jmbqtsueje1hhfqved273412i7.apps.googleusercontent.com"}
-                            buttonText="Google"
-                            render={renderProps => (
-                                <a
-                                    className="nes-btn"
-                                    href="#"
-                                    onClick={renderProps.onClick}
-                                    style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "xx-large"}}
-                                >
-                                    Login
-                                </a>
-                            )}
-                            onSuccess={responseGoogle}
-                            onFailure={responseGoogle}
-                        /> : <>
-                            <MakeLink to={'/bookwrite'}>
-                                <
-                                    button
-                                    type="button"
-                                    className="nes-btn is-success"
-                                    style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
-                                    onClick={showSidebar}
-                                >
-                                    write
-                                </button>
-                            </MakeLink>
-                            <
-                                button
-                                type="button"
-                                className="nes-btn is-error"
-                                style={{marginLeft: "10%", fontFamily: "Neodgm", fontSize: "x-large"}}
-                                onClick={logout}
-                            >
-                                logout
-                            </button>
-                        </>}
-                    </div>
-                </SidebarWrap>
-            </SidebarNav>
-        </IconContext.Provider>
-    );
+  return (
+    <IconContext.Provider value={{ color: '#fff' }}>
+      <Nav>
+        <NavIcon to="#" onClick={showSidebar}>
+          <AiOutlineMenu />
+        </NavIcon>
+        <LogoLink to="/">Sung.Blog</LogoLink>
+      </Nav>
+      <SidebarNav sidebar={sidebar}>
+        <SidebarWrap>
+          <NavIcon to="#" onClick={showSidebar}>
+            <AiOutlineClose />
+          </NavIcon>
+          <SidebarLink to="/" onClick={showSidebar}>
+            Home
+          </SidebarLink>
+          <SidebarLink to="/all" onClick={showSidebar}>
+            All
+          </SidebarLink>
+          {units.map((unit) => (
+            <SidebarLink
+              key={unit.id}
+              to={`/unit/${unit.id}`}
+              onClick={showSidebar}
+            >
+              {unit.content_name}
+            </SidebarLink>
+          ))}
+          <div>
+            {!login ? (
+              <GoogleLogin
+                clientId="940522265963-gqbtd1jmbqtsueje1hhfqved273412i7.apps.googleusercontent.com"
+                buttonText="Google"
+                render={(renderProps) => (
+                  // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                  <a
+                    className="nes-btn"
+                    href="#"
+                    onClick={renderProps.onClick}
+                    style={{
+                      marginLeft: '10%',
+                      fontFamily: 'Neodgm',
+                      fontSize: 'xx-large',
+                    }}
+                  >
+                    Login
+                  </a>
+                )}
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+              />
+            ) : (
+              <>
+                <MakeLink to="/bookwrite">
+                  <button
+                    type="button"
+                    className="nes-btn is-success"
+                    style={{
+                      marginLeft: '10%',
+                      fontFamily: 'Neodgm',
+                      fontSize: 'x-large',
+                    }}
+                    onClick={showSidebar}
+                  >
+                    write
+                  </button>
+                </MakeLink>
+                <button
+                  type="button"
+                  className="nes-btn is-error"
+                  style={{
+                    marginLeft: '10%',
+                    fontFamily: 'Neodgm',
+                    fontSize: 'x-large',
+                  }}
+                  onClick={logout}
+                >
+                  logout
+                </button>
+              </>
+            )}
+          </div>
+        </SidebarWrap>
+      </SidebarNav>
+    </IconContext.Provider>
+  );
 };
 
-export default SideBar
-
+export default SideBar;
