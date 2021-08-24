@@ -6,10 +6,10 @@ import (
 	"github.com/backand/db"
 	"github.com/backand/ent"
 	"github.com/backand/ent/book"
-	"github.com/backand/ent/cipher"
 	"github.com/backand/ent/unit"
 	"github.com/backand/ent/user"
 	"github.com/labstack/echo/v4"
+	_ "go/ast"
 	"log"
 	"net/http"
 	"strconv"
@@ -29,45 +29,46 @@ type (
 )
 
 func BookCreate(c echo.Context) error {
-	var cipherText []struct {
-		value []byte `json:"googlenum"`
+	var plainText []struct {
+		Id		int		`json:"id"`
+		Googlenum string `json:"googlenum"`
 	}
-	var id []byte
-	ctx := context.Background()
-	client := db.Config()
-	client.Cipher.Query().
-		Where(cipher.ID(1)).
-		Select(cipher.FieldDefault).
-		Scan(ctx, &cipherText)
-
-	cipherText[0].value = decrypt(cipherText[0].value, "chltjdgus123!")
-	fmt.Println(cipherText[0].value)
-
-	//booking := &bookmaker{}
 	req := c.Request()
 	headers := req.Header
-	id = []byte(headers.Get("id"))
-	fmt.Println(id)
+	id := headers.Get("id")
+	ctx := context.Background()
+	client := db.Config()
+	err := client.User.Query().
+		Where(user.ID(1)).
+		Select(user.FieldID, user.FieldGooglenum).
+		Scan(ctx, &plainText)
 
-	decode := decrypt(cipherText[0].value, "chltjdgus123!")
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
 
-	fmt.Println(decode)
-	//c.Bind(booking)
-	//booking.ID, _ = strconv.Atoi(id)
-	//fmt.Println(booking.Title, booking.Subject, booking.ID, booking.Unit)
-	//cr, err := client.Book.Create().
-	//	SetTitle(booking.Title).
-	//	SetUnitidID(booking.Unit).
-	//	//SetUseridID(func(q *ent.UserQuery) {
-	//	//	q.Select(user.FieldID).Where(user.Googlenum(decode))
-	//	//}).
-	//	SetSubject(booking.Subject).
-	//	Save(ctx)
-	//if err != nil {
-	//	log.Println(err)
-	//	return c.JSON(http.StatusBadRequest, err)
-	//}
-	return c.JSON(http.StatusOK, decode)
+	match := CheckPasswordHash(plainText[0].Googlenum, id)
+
+	if !match {
+		return nil
+	}
+
+	booking := &bookmaker{}
+	c.Bind(booking)
+	booking.ID, _ = strconv.Atoi(id)
+	fmt.Println(booking.Title, booking.Subject, booking.ID, booking.Unit)
+	cr, err := client.Book.Create().
+		SetTitle(booking.Title).
+		SetUnitidID(booking.Unit).
+		SetUseridID(plainText[0].Id).
+		SetSubject(booking.Subject).
+		Save(ctx)
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, cr)
 }
 
 func BookRead(c echo.Context) error {

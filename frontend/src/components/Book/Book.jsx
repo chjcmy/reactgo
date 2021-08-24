@@ -126,12 +126,10 @@ const Date = styled.div `
 
 const Book = ({ match }) => {
 
-    console.log(match.params.id);
     const [rbook, setRbook] = useState([]);
     const findBook = async () => {
         const res = await instance.get(`/bookread/${match.params.id}`);
         setRbook(res.data);
-        console.log(res.data);
     };
     useEffect(() => {
         findBook().then();
@@ -155,10 +153,6 @@ const Book = ({ match }) => {
                     disabled={true}
                     config={ editorConfiguration }
                     data={rbook.subject}
-                    onReady={ editor => {
-                        // You can store the "editor" and use when it is needed.
-                        console.log( 'Editor1 is ready to use!', editor );
-                    } }
                 />
             </BookDiv>
 

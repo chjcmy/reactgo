@@ -9,9 +9,6 @@ import (
 // Book is the predicate function for book builders.
 type Book func(*sql.Selector)
 
-// Cipher is the predicate function for cipher builders.
-type Cipher func(*sql.Selector)
-
 // Unit is the predicate function for unit builders.
 type Unit func(*sql.Selector)
 

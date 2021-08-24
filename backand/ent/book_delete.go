@@ -20,9 +20,9 @@ type BookDelete struct {
 	mutation *BookMutation
 }
 
-// Where adds a new predicate to the BookDelete builder.
+// Where appends a list predicates to the BookDelete builder.
 func (bd *BookDelete) Where(ps ...predicate.Book) *BookDelete {
-	bd.mutation.predicates = append(bd.mutation.predicates, ps...)
+	bd.mutation.Where(ps...)
 	return bd
 }
 
@@ -46,6 +46,9 @@ func (bd *BookDelete) Exec(ctx context.Context) (int, error) {
 			return affected, err
 		})
 		for i := len(bd.hooks) - 1; i >= 0; i-- {
+			if bd.hooks[i] == nil {
+				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
+			}
 			mut = bd.hooks[i](mut)
 		}
 		if _, err := mut.Mutate(ctx, bd.mutation); err != nil {

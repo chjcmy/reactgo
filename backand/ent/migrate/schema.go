@@ -38,18 +38,6 @@ var (
 			},
 		},
 	}
-	// CiphersColumns holds the columns for the "ciphers" table.
-	CiphersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "default", Type: field.TypeBytes},
-	}
-	// CiphersTable holds the schema information for the "ciphers" table.
-	CiphersTable = &schema.Table{
-		Name:        "ciphers",
-		Columns:     CiphersColumns,
-		PrimaryKey:  []*schema.Column{CiphersColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
-	}
 	// UnitsColumns holds the columns for the "units" table.
 	UnitsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -58,10 +46,9 @@ var (
 	}
 	// UnitsTable holds the schema information for the "units" table.
 	UnitsTable = &schema.Table{
-		Name:        "units",
-		Columns:     UnitsColumns,
-		PrimaryKey:  []*schema.Column{UnitsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "units",
+		Columns:    UnitsColumns,
+		PrimaryKey: []*schema.Column{UnitsColumns[0]},
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
@@ -77,15 +64,13 @@ var (
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
-		Name:        "users",
-		Columns:     UsersColumns,
-		PrimaryKey:  []*schema.Column{UsersColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "users",
+		Columns:    UsersColumns,
+		PrimaryKey: []*schema.Column{UsersColumns[0]},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		BooksTable,
-		CiphersTable,
 		UnitsTable,
 		UsersTable,
 	}

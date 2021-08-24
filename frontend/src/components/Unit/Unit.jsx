@@ -47,12 +47,10 @@ const Unit = ({match}) => {
     const findAllBook = async () => {
         const res = await instance.get('/bookshow/0');
         setBooks(res.data);
-        console.log(res.data);
     };
     const findUnitBook = async () => {
         const res = await instance.get(`/pickunitbooks/${match.params.unit}/0`);
         setBooks(res.data);
-        console.log(books);
     };
 
     const deleteBook = useCallback(async (id) => {

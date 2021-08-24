@@ -325,8 +325,8 @@ func (uq *UnitQuery) GroupBy(field string, fields ...string) *UnitGroupBy {
 //		Select(unit.FieldContent).
 //		Scan(ctx, &v)
 //
-func (uq *UnitQuery) Select(field string, fields ...string) *UnitSelect {
-	uq.fields = append([]string{field}, fields...)
+func (uq *UnitQuery) Select(fields ...string) *UnitSelect {
+	uq.fields = append(uq.fields, fields...)
 	return &UnitSelect{UnitQuery: uq}
 }
 
@@ -470,10 +470,14 @@ func (uq *UnitQuery) querySpec() *sqlgraph.QuerySpec {
 func (uq *UnitQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(uq.driver.Dialect())
 	t1 := builder.Table(unit.Table)
-	selector := builder.Select(t1.Columns(unit.Columns...)...).From(t1)
+	columns := uq.fields
+	if len(columns) == 0 {
+		columns = unit.Columns
+	}
+	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if uq.sql != nil {
 		selector = uq.sql
-		selector.Select(selector.Columns(unit.Columns...)...)
+		selector.Select(selector.Columns(columns...)...)
 	}
 	for _, p := range uq.predicates {
 		p(selector)
@@ -741,13 +745,24 @@ func (ugb *UnitGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 }
 
 func (ugb *UnitGroupBy) sqlQuery() *sql.Selector {
-	selector := ugb.sql
-	columns := make([]string, 0, len(ugb.fields)+len(ugb.fns))
-	columns = append(columns, ugb.fields...)
+	selector := ugb.sql.Select()
+	aggregation := make([]string, 0, len(ugb.fns))
 	for _, fn := range ugb.fns {
-		columns = append(columns, fn(selector))
+		aggregation = append(aggregation, fn(selector))
 	}
-	return selector.Select(columns...).GroupBy(ugb.fields...)
+	// If no columns were selected in a custom aggregation function, the default
+	// selection is the fields used for "group-by", and the aggregation functions.
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(ugb.fields)+len(ugb.fns))
+		for _, f := range ugb.fields {
+			columns = append(columns, selector.C(f))
+		}
+		for _, c := range aggregation {
+			columns = append(columns, c)
+		}
+		selector.Select(columns...)
+	}
+	return selector.GroupBy(selector.Columns(ugb.fields...)...)
 }
 
 // UnitSelect is the builder for selecting fields of Unit entities.
@@ -963,16 +978,10 @@ func (us *UnitSelect) BoolX(ctx context.Context) bool {
 
 func (us *UnitSelect) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
-	query, args := us.sqlQuery().Query()
+	query, args := us.sql.Query()
 	if err := us.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
-}
-
-func (us *UnitSelect) sqlQuery() sql.Querier {
-	selector := us.sql
-	selector.Select(selector.Columns(us.fields...)...)
-	return selector
 }

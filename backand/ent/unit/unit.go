@@ -15,7 +15,7 @@ const (
 	EdgeContents = "contents"
 	// Table holds the table name of the unit in the database.
 	Table = "units"
-	// ContentsTable is the table the holds the contents relation/edge.
+	// ContentsTable is the table that holds the contents relation/edge.
 	ContentsTable = "books"
 	// ContentsInverseTable is the table name for the Book entity.
 	// It exists in this package in order to avoid circular dependency with the "book" package.

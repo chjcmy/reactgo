@@ -17,7 +17,6 @@ const Home = () => {
     const findNewBooks = async () => {
         const res = await instance.get('/newbooks');
         setNewBooks(res.data);
-        console.log(newBooks);
     };
 
     useEffect(() => {
@@ -26,10 +25,6 @@ const Home = () => {
     return (
         <>
             <NewBooks>
-                <GoogleAdsense
-                    adClient='ca-pub-7458640452724959'
-                    adSlot='9876543210'
-                />
                 <h1>최신글</h1>
                 {newBooks.map(newbook => (
                     <div className="nes-container with-title is-centered"
@@ -37,7 +32,7 @@ const Home = () => {
                         <p className="title title-font" style={{fontSize: "x-large"}}>
                             {newbook.edges.unitid.content_name}
                         </p>
-                        <Link href={`/book/${newbook.id}`}>{newbook.title}</Link>
+                        <Link to={`/book/${newbook.id}`}>{newbook.title}</Link>
                     </div>
                 ))}
             </NewBooks>
