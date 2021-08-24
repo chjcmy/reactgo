@@ -22,6 +22,19 @@ func (f BookFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return f(ctx, mv)
 }
 
+// The CipherFunc type is an adapter to allow the use of ordinary
+// function as Cipher mutator.
+type CipherFunc func(context.Context, *ent.CipherMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CipherFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CipherMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CipherMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The UnitFunc type is an adapter to allow the use of ordinary
 // function as Unit mutator.
 type UnitFunc func(context.Context, *ent.UnitMutation) (ent.Value, error)

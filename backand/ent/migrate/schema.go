@@ -38,6 +38,18 @@ var (
 			},
 		},
 	}
+	// CiphersColumns holds the columns for the "ciphers" table.
+	CiphersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "default", Type: field.TypeBytes},
+	}
+	// CiphersTable holds the schema information for the "ciphers" table.
+	CiphersTable = &schema.Table{
+		Name:        "ciphers",
+		Columns:     CiphersColumns,
+		PrimaryKey:  []*schema.Column{CiphersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// UnitsColumns holds the columns for the "units" table.
 	UnitsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -73,6 +85,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		BooksTable,
+		CiphersTable,
 		UnitsTable,
 		UsersTable,
 	}

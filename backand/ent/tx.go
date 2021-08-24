@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Book is the client for interacting with the Book builders.
 	Book *BookClient
+	// Cipher is the client for interacting with the Cipher builders.
+	Cipher *CipherClient
 	// Unit is the client for interacting with the Unit builders.
 	Unit *UnitClient
 	// User is the client for interacting with the User builders.
@@ -154,6 +156,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Book = NewBookClient(tx.config)
+	tx.Cipher = NewCipherClient(tx.config)
 	tx.Unit = NewUnitClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }

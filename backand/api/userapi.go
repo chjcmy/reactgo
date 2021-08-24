@@ -50,7 +50,7 @@ func Remake(c echo.Context) error {
 
 func Login(c echo.Context) error {
 	var userName []struct {
-		Id int `json:"id"`
+		GoogleNum []byte `json:"googlenum"`
 	}
 	client := db.Config()
 	nums := &googleNum{}
@@ -58,8 +58,14 @@ func Login(c echo.Context) error {
 	ctx := context.Background()
 	err := client.User.Query().
 		Where(user.Googlenum(nums.Num)).
-		Select(user.FieldID).
+		Select(user.FieldGooglenum).
 		Scan(ctx, &userName)
+
+	userName[0].GoogleNum = encrypt([]byte("chltjdgus123!"), nums.Num)
+	//fmt.Println(ciphertexts)
+	//plaintext := decrypt(ciphertexts, userName[0].GoogleNum)
+	//fmt.Println(plaintext)
+
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, err)

@@ -10,6 +10,7 @@ import (
 	"github.com/backand/ent/migrate"
 
 	"github.com/backand/ent/book"
+	"github.com/backand/ent/cipher"
 	"github.com/backand/ent/unit"
 	"github.com/backand/ent/user"
 
@@ -25,6 +26,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Book is the client for interacting with the Book builders.
 	Book *BookClient
+	// Cipher is the client for interacting with the Cipher builders.
+	Cipher *CipherClient
 	// Unit is the client for interacting with the Unit builders.
 	Unit *UnitClient
 	// User is the client for interacting with the User builders.
@@ -43,6 +46,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Book = NewBookClient(c.config)
+	c.Cipher = NewCipherClient(c.config)
 	c.Unit = NewUnitClient(c.config)
 	c.User = NewUserClient(c.config)
 }
@@ -79,6 +83,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:    ctx,
 		config: cfg,
 		Book:   NewBookClient(cfg),
+		Cipher: NewCipherClient(cfg),
 		Unit:   NewUnitClient(cfg),
 		User:   NewUserClient(cfg),
 	}, nil
@@ -100,6 +105,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		config: cfg,
 		Book:   NewBookClient(cfg),
+		Cipher: NewCipherClient(cfg),
 		Unit:   NewUnitClient(cfg),
 		User:   NewUserClient(cfg),
 	}, nil
@@ -132,6 +138,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Book.Use(hooks...)
+	c.Cipher.Use(hooks...)
 	c.Unit.Use(hooks...)
 	c.User.Use(hooks...)
 }
@@ -256,6 +263,96 @@ func (c *BookClient) QueryUserid(b *Book) *UserQuery {
 // Hooks returns the client hooks.
 func (c *BookClient) Hooks() []Hook {
 	return c.hooks.Book
+}
+
+// CipherClient is a client for the Cipher schema.
+type CipherClient struct {
+	config
+}
+
+// NewCipherClient returns a client for the Cipher from the given config.
+func NewCipherClient(c config) *CipherClient {
+	return &CipherClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `cipher.Hooks(f(g(h())))`.
+func (c *CipherClient) Use(hooks ...Hook) {
+	c.hooks.Cipher = append(c.hooks.Cipher, hooks...)
+}
+
+// Create returns a create builder for Cipher.
+func (c *CipherClient) Create() *CipherCreate {
+	mutation := newCipherMutation(c.config, OpCreate)
+	return &CipherCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Cipher entities.
+func (c *CipherClient) CreateBulk(builders ...*CipherCreate) *CipherCreateBulk {
+	return &CipherCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Cipher.
+func (c *CipherClient) Update() *CipherUpdate {
+	mutation := newCipherMutation(c.config, OpUpdate)
+	return &CipherUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *CipherClient) UpdateOne(ci *Cipher) *CipherUpdateOne {
+	mutation := newCipherMutation(c.config, OpUpdateOne, withCipher(ci))
+	return &CipherUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *CipherClient) UpdateOneID(id int) *CipherUpdateOne {
+	mutation := newCipherMutation(c.config, OpUpdateOne, withCipherID(id))
+	return &CipherUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Cipher.
+func (c *CipherClient) Delete() *CipherDelete {
+	mutation := newCipherMutation(c.config, OpDelete)
+	return &CipherDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *CipherClient) DeleteOne(ci *Cipher) *CipherDeleteOne {
+	return c.DeleteOneID(ci.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *CipherClient) DeleteOneID(id int) *CipherDeleteOne {
+	builder := c.Delete().Where(cipher.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &CipherDeleteOne{builder}
+}
+
+// Query returns a query builder for Cipher.
+func (c *CipherClient) Query() *CipherQuery {
+	return &CipherQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Cipher entity by its id.
+func (c *CipherClient) Get(ctx context.Context, id int) (*Cipher, error) {
+	return c.Query().Where(cipher.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *CipherClient) GetX(ctx context.Context, id int) *Cipher {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *CipherClient) Hooks() []Hook {
+	return c.hooks.Cipher
 }
 
 // UnitClient is a client for the Unit schema.
