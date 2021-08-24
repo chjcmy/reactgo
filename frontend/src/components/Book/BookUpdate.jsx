@@ -87,6 +87,7 @@ const editorConfiguration = {
     'insertTable',
     'imageUpload',
     'codeBlock',
+    'link',
     '|',
     'undo',
     'redo',
@@ -141,6 +142,7 @@ const editorConfiguration = {
       { language: 'go', label: 'Go' },
     ],
   },
+  placeholder: '글을 입력해보세요!',
 };
 
 const Outer = styled.div`
@@ -162,21 +164,18 @@ const Save = styled(rlink)`
 `;
 
 const BookUpdate = ({ match }) => {
-  // ${match.params.id}
   const [read, setRead] = useState(false);
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const findBook = async () => {
-    const res = await instance.get(`/bookread/${match.params.id}`);
-    setTitle(res.data.title);
-    setSubject(res.data.subject);
-  };
-
   useEffect(() => {
+    const findBook = async () => {
+      const res = await instance.get(`/bookread/${match.params.id}`);
+      setTitle(res.data.title);
+      setSubject(res.data.subject);
+    };
     findBook().then();
-  }, [findBook, match.params.unit]);
+  }, [match.params.id]);
 
   const updateBook = async () => {
     await instance.put(`/bookupdate/${match.params.id}`, {

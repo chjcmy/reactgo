@@ -14,12 +14,12 @@ const NewBooks = styled.div`
 `;
 const Home = () => {
   const [newBooks, setNewBooks] = useState([]);
-  const findNewBooks = async () => {
-    const res = await instance.get('/newbooks');
-    setNewBooks(res.data);
-  };
 
   useEffect(() => {
+    const findNewBooks = async () => {
+      const res = await instance.get('/newbooks');
+      setNewBooks(res.data);
+    };
     findNewBooks().then();
   }, []);
   return (
