@@ -108,7 +108,7 @@ const Unit = ({match}) => {
                                             보기
                                         </Button>
                                     </Link>
-                                    {sessionStorage.getItem('id') === '1' ?
+                                    {sessionStorage.getItem('id') ?
                                         <>
                                         <Link to={`/bookupdate/${book.id}`}>
                                             <Button inverted color='yellow' size='big' floated={"left"}>
