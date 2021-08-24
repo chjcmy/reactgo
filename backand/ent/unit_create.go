@@ -90,11 +90,17 @@ func (uc *UnitCreate) Save(ctx context.Context) (*Unit, error) {
 				return nil, err
 			}
 			uc.mutation = mutation
-			node, err = uc.sqlSave(ctx)
+			if node, err = uc.sqlSave(ctx); err != nil {
+				return nil, err
+			}
+			mutation.id = &node.ID
 			mutation.done = true
 			return node, err
 		})
 		for i := len(uc.hooks) - 1; i >= 0; i-- {
+			if uc.hooks[i] == nil {
+				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
+			}
 			mut = uc.hooks[i](mut)
 		}
 		if _, err := mut.Mutate(ctx, uc.mutation); err != nil {
@@ -113,6 +119,19 @@ func (uc *UnitCreate) SaveX(ctx context.Context) *Unit {
 	return v
 }
 
+// Exec executes the query.
+func (uc *UnitCreate) Exec(ctx context.Context) error {
+	_, err := uc.Save(ctx)
+	return err
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (uc *UnitCreate) ExecX(ctx context.Context) {
+	if err := uc.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
 // defaults sets the default values of the builder before save.
 func (uc *UnitCreate) defaults() {
 	if _, ok := uc.mutation.Content(); !ok {
@@ -128,10 +147,10 @@ func (uc *UnitCreate) defaults() {
 // check runs all checks and user-defined validators on the builder.
 func (uc *UnitCreate) check() error {
 	if _, ok := uc.mutation.Content(); !ok {
-		return &ValidationError{Name: "content", err: errors.New("ent: missing required field \"content\"")}
+		return &ValidationError{Name: "content", err: errors.New(`ent: missing required field "content"`)}
 	}
 	if _, ok := uc.mutation.ContentName(); !ok {
-		return &ValidationError{Name: "content_name", err: errors.New("ent: missing required field \"content_name\"")}
+		return &ValidationError{Name: "content_name", err: errors.New(`ent: missing required field "content_name"`)}
 	}
 	return nil
 }
@@ -139,8 +158,8 @@ func (uc *UnitCreate) check() error {
 func (uc *UnitCreate) sqlSave(ctx context.Context) (*Unit, error) {
 	_node, _spec := uc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, uc.driver, _spec); err != nil {
-		if cerr, ok := isSQLConstraintError(err); ok {
-			err = cerr
+		if sqlgraph.IsConstraintError(err) {
+			err = &ConstraintError{err.Error(), err}
 		}
 		return nil, err
 	}
@@ -227,19 +246,23 @@ func (ucb *UnitCreateBulk) Save(ctx context.Context) ([]*Unit, error) {
 				if i < len(mutators)-1 {
 					_, err = mutators[i+1].Mutate(root, ucb.builders[i+1].mutation)
 				} else {
+					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, ucb.driver, &sqlgraph.BatchCreateSpec{Nodes: specs}); err != nil {
-						if cerr, ok := isSQLConstraintError(err); ok {
-							err = cerr
+					if err = sqlgraph.BatchCreate(ctx, ucb.driver, spec); err != nil {
+						if sqlgraph.IsConstraintError(err) {
+							err = &ConstraintError{err.Error(), err}
 						}
 					}
 				}
-				mutation.done = true
 				if err != nil {
 					return nil, err
 				}
-				id := specs[i].ID.Value.(int64)
-				nodes[i].ID = int(id)
+				mutation.id = &nodes[i].ID
+				mutation.done = true
+				if specs[i].ID.Value != nil {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int(id)
+				}
 				return nodes[i], nil
 			})
 			for i := len(builder.hooks) - 1; i >= 0; i-- {
@@ -263,4 +286,17 @@ func (ucb *UnitCreateBulk) SaveX(ctx context.Context) []*Unit {
 		panic(err)
 	}
 	return v
+}
+
+// Exec executes the query.
+func (ucb *UnitCreateBulk) Exec(ctx context.Context) error {
+	_, err := ucb.Save(ctx)
+	return err
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (ucb *UnitCreateBulk) ExecX(ctx context.Context) {
+	if err := ucb.Exec(ctx); err != nil {
+		panic(err)
+	}
 }

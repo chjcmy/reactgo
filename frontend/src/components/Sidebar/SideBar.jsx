@@ -86,7 +86,7 @@ const SideBar = () => {
             console.log("error");
         }
         else {
-            window.sessionStorage.setItem('id', res.data[0].id);
+            window.sessionStorage.setItem('id', res.data[0].googlenum);
             setLogin(true);
         }
     };

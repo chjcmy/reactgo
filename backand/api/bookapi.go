@@ -9,6 +9,7 @@ import (
 	"github.com/backand/ent/unit"
 	"github.com/backand/ent/user"
 	"github.com/labstack/echo/v4"
+	_ "go/ast"
 	"log"
 	"net/http"
 	"strconv"
@@ -28,27 +29,45 @@ type (
 )
 
 func BookCreate(c echo.Context) error {
-	client := db.Config()
-	booking := &bookmaker{}
+	var plainText []struct {
+		Id		int		`json:"id"`
+		Googlenum string `json:"googlenum"`
+	}
 	req := c.Request()
 	headers := req.Header
 	id := headers.Get("id")
-	fmt.Println(id)
+	ctx := context.Background()
+	client := db.Config()
+	err := client.User.Query().
+		Where(user.ID(1)).
+		Select(user.FieldID, user.FieldGooglenum).
+		Scan(ctx, &plainText)
+
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	match := CheckPasswordHash(plainText[0].Googlenum, id)
+
+	if !match {
+		return nil
+	}
+
+	booking := &bookmaker{}
 	c.Bind(booking)
 	booking.ID, _ = strconv.Atoi(id)
 	fmt.Println(booking.Title, booking.Subject, booking.ID, booking.Unit)
-	ctx := context.Background()
 	cr, err := client.Book.Create().
 		SetTitle(booking.Title).
 		SetUnitidID(booking.Unit).
-		SetUseridID(booking.ID).
+		SetUseridID(plainText[0].Id).
 		SetSubject(booking.Subject).
 		Save(ctx)
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	log.Println("user was created: ", cr)
 	return c.JSON(http.StatusOK, cr)
 }
 

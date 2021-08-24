@@ -23,9 +23,9 @@ type BookUpdate struct {
 	mutation *BookMutation
 }
 
-// Where adds a new predicate for the BookUpdate builder.
+// Where appends a list predicates to the BookUpdate builder.
 func (bu *BookUpdate) Where(ps ...predicate.Book) *BookUpdate {
-	bu.mutation.predicates = append(bu.mutation.predicates, ps...)
+	bu.mutation.Where(ps...)
 	return bu
 }
 
@@ -153,6 +153,9 @@ func (bu *BookUpdate) Save(ctx context.Context) (int, error) {
 			return affected, err
 		})
 		for i := len(bu.hooks) - 1; i >= 0; i-- {
+			if bu.hooks[i] == nil {
+				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
+			}
 			mut = bu.hooks[i](mut)
 		}
 		if _, err := mut.Mutate(ctx, bu.mutation); err != nil {
@@ -311,8 +314,8 @@ func (bu *BookUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if n, err = sqlgraph.UpdateNodes(ctx, bu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{book.Label}
-		} else if cerr, ok := isSQLConstraintError(err); ok {
-			err = cerr
+		} else if sqlgraph.IsConstraintError(err) {
+			err = &ConstraintError{err.Error(), err}
 		}
 		return 0, err
 	}
@@ -458,6 +461,9 @@ func (buo *BookUpdateOne) Save(ctx context.Context) (*Book, error) {
 			return node, err
 		})
 		for i := len(buo.hooks) - 1; i >= 0; i-- {
+			if buo.hooks[i] == nil {
+				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
+			}
 			mut = buo.hooks[i](mut)
 		}
 		if _, err := mut.Mutate(ctx, buo.mutation); err != nil {
@@ -636,8 +642,8 @@ func (buo *BookUpdateOne) sqlSave(ctx context.Context) (_node *Book, err error) 
 	if err = sqlgraph.UpdateNode(ctx, buo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{book.Label}
-		} else if cerr, ok := isSQLConstraintError(err); ok {
-			err = cerr
+		} else if sqlgraph.IsConstraintError(err) {
+			err = &ConstraintError{err.Error(), err}
 		}
 		return nil, err
 	}

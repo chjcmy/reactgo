@@ -50,7 +50,7 @@ func Remake(c echo.Context) error {
 
 func Login(c echo.Context) error {
 	var userName []struct {
-		Id int `json:"id"`
+		GoogleNum string `json:"googlenum"`
 	}
 	client := db.Config()
 	nums := &googleNum{}
@@ -58,13 +58,21 @@ func Login(c echo.Context) error {
 	ctx := context.Background()
 	err := client.User.Query().
 		Where(user.Googlenum(nums.Num)).
-		Select(user.FieldID).
+		Select(user.FieldGooglenum).
 		Scan(ctx, &userName)
+
+	if userName[0].GoogleNum != nums.Num {
+		return c.String(http.StatusBadRequest, "null")
+	}
+
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, userName)
+
+	userName[0].GoogleNum, _ = HashPassword(userName[0].GoogleNum)
+
+	return c.JSON(http.StatusOK, userName) //nolint:govet
 }
 
 func Hosting(c echo.Context) error {

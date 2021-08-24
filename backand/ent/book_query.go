@@ -361,8 +361,8 @@ func (bq *BookQuery) GroupBy(field string, fields ...string) *BookGroupBy {
 //		Select(book.FieldTitle).
 //		Scan(ctx, &v)
 //
-func (bq *BookQuery) Select(field string, fields ...string) *BookSelect {
-	bq.fields = append([]string{field}, fields...)
+func (bq *BookQuery) Select(fields ...string) *BookSelect {
+	bq.fields = append(bq.fields, fields...)
 	return &BookSelect{BookQuery: bq}
 }
 
@@ -543,10 +543,14 @@ func (bq *BookQuery) querySpec() *sqlgraph.QuerySpec {
 func (bq *BookQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(bq.driver.Dialect())
 	t1 := builder.Table(book.Table)
-	selector := builder.Select(t1.Columns(book.Columns...)...).From(t1)
+	columns := bq.fields
+	if len(columns) == 0 {
+		columns = book.Columns
+	}
+	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if bq.sql != nil {
 		selector = bq.sql
-		selector.Select(selector.Columns(book.Columns...)...)
+		selector.Select(selector.Columns(columns...)...)
 	}
 	for _, p := range bq.predicates {
 		p(selector)
@@ -814,13 +818,24 @@ func (bgb *BookGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 }
 
 func (bgb *BookGroupBy) sqlQuery() *sql.Selector {
-	selector := bgb.sql
-	columns := make([]string, 0, len(bgb.fields)+len(bgb.fns))
-	columns = append(columns, bgb.fields...)
+	selector := bgb.sql.Select()
+	aggregation := make([]string, 0, len(bgb.fns))
 	for _, fn := range bgb.fns {
-		columns = append(columns, fn(selector))
+		aggregation = append(aggregation, fn(selector))
 	}
-	return selector.Select(columns...).GroupBy(bgb.fields...)
+	// If no columns were selected in a custom aggregation function, the default
+	// selection is the fields used for "group-by", and the aggregation functions.
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(bgb.fields)+len(bgb.fns))
+		for _, f := range bgb.fields {
+			columns = append(columns, selector.C(f))
+		}
+		for _, c := range aggregation {
+			columns = append(columns, c)
+		}
+		selector.Select(columns...)
+	}
+	return selector.GroupBy(selector.Columns(bgb.fields...)...)
 }
 
 // BookSelect is the builder for selecting fields of Book entities.
@@ -1036,16 +1051,10 @@ func (bs *BookSelect) BoolX(ctx context.Context) bool {
 
 func (bs *BookSelect) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
-	query, args := bs.sqlQuery().Query()
+	query, args := bs.sql.Query()
 	if err := bs.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
-}
-
-func (bs *BookSelect) sqlQuery() sql.Querier {
-	selector := bs.sql
-	selector.Select(selector.Columns(bs.fields...)...)
-	return selector
 }

@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {instance} from '../../axios';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
+import {Link as rlink} from 'react-router-dom';
 
 import {CKEditor} from '@ckeditor/ckeditor5-react'
+import Link from '@ckeditor/ckeditor5-link/src/link';
+import AutoLink from '@ckeditor/ckeditor5-link/src/autolink';
 import InlineEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
 import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
@@ -59,6 +61,9 @@ const editorConfiguration = {
         IndentBlock,
         Base64UploadAdapter,
         CodeBlock,
+        Link,
+        AutoLink
+
     ],
     toolbar: [
         "heading",
@@ -152,7 +157,7 @@ const Creator = styled.div`
   display: flex;
   height: 50%;
 `;
-const Save = styled(Link)`
+const Save = styled(rlink)`
   display: flex;
   height: 50%;
 `;
@@ -160,12 +165,13 @@ const Save = styled(Link)`
 const BookUpdate = ({match}) => {
     // ${match.params.id}
     const [read, setRead] = useState(false);
-    const [retitle, setTitle] = useState('');
-    const [resubject, setResubject] = useState('');
+    const [title, setTitle] = useState('');
+    const [subject, setSubject] = useState('');
 
     const findBook = async () => {
         const res = await instance.get(`/bookread/${match.params.id}`);
-        console.log(res.data);
+        setTitle(res.data.title)
+        setSubject(res.data.subject)
     };
 
     useEffect(() => {
@@ -174,57 +180,48 @@ const BookUpdate = ({match}) => {
 
 
     const updateBook = async () => {
-        // await instance.post(`/bookupdate/${match.params.id}`, {
-        //     title: title,
-        //     subject: subject,
-        // }, {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'id': sessionStorage.getItem("id")
-        //     }
-        // });
+        await instance.put(`/bookupdate/${match.params.id}`, {
+            title: title,
+            subject: subject,
+        });
     };
 
-    // const updateSubject = (text) => {
-    //     setRebook({...rebook, subject: text});
-    // }
     if (read) {
         setTimeout(() => setRead(false), 500);
     }
 
     return <>
         <Outer>
-            {/*<FamilyFont>*/}
-            {/*    <Creator>*/}
-            {/*        <Save to="/" onClick={updateBook} style={{marginLeft: "30%", width: "100%"}}>*/}
-            {/*            <button type="button" className="nes-btn is-primary"*/}
-            {/*                    style={{marginLeft: "5%", fontSize: "xx-large"}}>수정*/}
-            {/*            </button>*/}
-            {/*        </Save>*/}
-            {/*        {read ?*/}
-            {/*            <div style={{writingMode: "horizontal-tb", fontSize: "large"}}>읽혀짐</div>*/}
-            {/*            :*/}
-            {/*            null*/}
-            {/*        }*/}
-            {/*    </Creator>*/}
-            {/*    <div className="nes-field" style={{marginBottom: "2%"}}>*/}
-            {/*        <label htmlFor="name_field">주제</label>*/}
-            {/*        <input type="text" id="name_field" className="nes-input" style={{width: "90%", height: "50%"}}*/}
-            {/*               value={rebook.title || ''}*/}
-            {/*        />*/}
-            {/*    </div>*/}
-            {/*</FamilyFont>*/}
-            {/*<CKEditor*/}
-            {/*    editor={InlineEditor}*/}
-            {/*    config={editorConfiguration}*/}
-            {/*    data={rebook.subject}*/}
-            {/*    onChange={(event, editor) => {*/}
-            {/*        const data = editor.getData();*/}
-            {/*        updateSubject(data)*/}
-            {/*        console.log(...rebook)*/}
-            {/*        console.log(rebook.subject);*/}
-            {/*    }}*/}
-            {/*/>*/}
+            <FamilyFont>
+                <Creator>
+                    <Save to="/" onClick={updateBook} style={{marginLeft: "30%", width: "100%"}}>
+                        <button type="button" className="nes-btn is-primary"
+                                style={{marginLeft: "5%", fontSize: "xx-large"}}>수정
+                        </button>
+                    </Save>
+
+                    {read ?
+                        <div style={{writingMode: "horizontal-tb", fontSize: "large"}}>읽혀짐</div>
+                        :
+                        null
+                    }
+                </Creator>
+                <div className="nes-field" style={{marginBottom: "2%"}}>
+                    <label htmlFor="name_field">주제</label>
+                    <input type="text" id="name_field" className="nes-input" style={{width: "90%", height: "50%"}}
+                           value={title || ''} onChange={ e => setTitle(e.target.value)}
+                    />
+                </div>
+            </FamilyFont>
+            <CKEditor
+                editor={InlineEditor}
+                config={editorConfiguration}
+                data={subject}
+                onChange={(event, editor) => {
+                    const data = editor.getData();
+                    setSubject(data);
+                }}
+            />
         </Outer>
     </>;
 };

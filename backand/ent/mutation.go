@@ -120,8 +120,8 @@ func (m BookMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// ID returns the ID value in the mutation. Note that the ID
-// is only available if it was provided to the builder.
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
 func (m *BookMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
@@ -349,6 +349,11 @@ func (m *BookMutation) UseridIDs() (ids []int) {
 func (m *BookMutation) ResetUserid() {
 	m.userid = nil
 	m.cleareduserid = false
+}
+
+// Where appends a list predicates to the BookMutation builder.
+func (m *BookMutation) Where(ps ...predicate.Book) {
+	m.predicates = append(m.predicates, ps...)
 }
 
 // Op returns the operation name.
@@ -694,8 +699,8 @@ func (m UnitMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// ID returns the ID value in the mutation. Note that the ID
-// is only available if it was provided to the builder.
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
 func (m *UnitMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
@@ -801,6 +806,7 @@ func (m *UnitMutation) RemoveContentIDs(ids ...int) {
 		m.removedcontents = make(map[int]struct{})
 	}
 	for i := range ids {
+		delete(m.contents, ids[i])
 		m.removedcontents[ids[i]] = struct{}{}
 	}
 }
@@ -826,6 +832,11 @@ func (m *UnitMutation) ResetContents() {
 	m.contents = nil
 	m.clearedcontents = false
 	m.removedcontents = nil
+}
+
+// Where appends a list predicates to the UnitMutation builder.
+func (m *UnitMutation) Where(ps ...predicate.Unit) {
+	m.predicates = append(m.predicates, ps...)
 }
 
 // Op returns the operation name.
@@ -1133,8 +1144,8 @@ func (m UserMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// ID returns the ID value in the mutation. Note that the ID
-// is only available if it was provided to the builder.
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
 func (m *UserMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
@@ -1456,6 +1467,7 @@ func (m *UserMutation) RemoveWriterIDs(ids ...int) {
 		m.removedwriter = make(map[int]struct{})
 	}
 	for i := range ids {
+		delete(m.writer, ids[i])
 		m.removedwriter[ids[i]] = struct{}{}
 	}
 }
@@ -1481,6 +1493,11 @@ func (m *UserMutation) ResetWriter() {
 	m.writer = nil
 	m.clearedwriter = false
 	m.removedwriter = nil
+}
+
+// Where appends a list predicates to the UserMutation builder.
+func (m *UserMutation) Where(ps ...predicate.User) {
+	m.predicates = append(m.predicates, ps...)
 }
 
 // Op returns the operation name.

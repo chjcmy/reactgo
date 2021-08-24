@@ -31,6 +31,7 @@ import Indent from "@ckeditor/ckeditor5-indent/src/indent";
 import IndentBlock from "@ckeditor/ckeditor5-indent/src/indentblock";
 import Base64UploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter";
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
+import axios from "axios";
 
 const editorConfiguration = {
     language: "ko",
@@ -183,7 +184,6 @@ const BookWrite = () => {
     const findUnits = async () => {
         await instance.get('/unitshosting').then(function (res) {
             setUnits(res.data);
-            console.log(units);
         })
             .catch(function (error) {
                 console.log(error);
@@ -191,7 +191,6 @@ const BookWrite = () => {
     };
 
     const createBook = async () => {
-        console.log(chapter, title, subject);
         await instance.post('/bookcreate', {
             unit: chapter,
             title: title,
@@ -210,7 +209,6 @@ const BookWrite = () => {
         findUnits().then();
     }, []);
     const click = () => {
-        console.log(chapter, title, subject);
         createBook().then();
     };
 
@@ -273,7 +271,6 @@ const BookWrite = () => {
                 config={editorConfiguration}
                 onChange={(event, editor) => {
                     const data = editor.getData();
-                    console.log(data);
                     setSubject(data);
                     setRead(true);
                 }}

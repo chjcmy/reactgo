@@ -31,7 +31,7 @@ const (
 	EdgeWriter = "writer"
 	// Table holds the table name of the user in the database.
 	Table = "users"
-	// WriterTable is the table the holds the writer relation/edge.
+	// WriterTable is the table that holds the writer relation/edge.
 	WriterTable = "books"
 	// WriterInverseTable is the table name for the Book entity.
 	// It exists in this package in order to avoid circular dependency with the "book" package.
