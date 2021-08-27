@@ -39,19 +39,13 @@ func BookCreate(c echo.Context) error {
 	ctx := context.Background()
 	client := db.Config()
 	err := client.User.Query().
-		Where(user.ID(1)).
+		Where(user.Googlenum(id)).
 		Select(user.FieldID, user.FieldGooglenum).
 		Scan(ctx, &plainText)
 
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
-	}
-
-	match := CheckPasswordHash(plainText[0].Googlenum, id)
-
-	if !match {
-		return nil
 	}
 
 	booking := &bookmaker{}
@@ -93,7 +87,6 @@ func BookRead(c echo.Context) error {
 
 func BookShow(c echo.Context) error {
 	client := db.Config()
-	num, _ := strconv.Atoi(c.Param("num"))
 	ctx := context.Background()
 	r, err := client.Book.Query().
 		WithUserid(func(q *ent.UserQuery) {
@@ -103,7 +96,6 @@ func BookShow(c echo.Context) error {
 			q.Select(unit.FieldContentName)
 		}).
 		Limit(10).
-		Offset(num).
 		Order(ent.Desc(book.FieldID)).
 		All(ctx)
 	if err != nil {

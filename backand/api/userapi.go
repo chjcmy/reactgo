@@ -4,6 +4,7 @@ import (
 	"context"
 	db "github.com/backand/db"
 	"github.com/backand/ent/user"
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
@@ -48,6 +49,11 @@ func Remake(c echo.Context) error {
 	return c.JSON(http.StatusOK, u)
 }
 
+type jwtCustomClaims  struct {
+	Name  string `json:"name"`
+	jwt.StandardClaims
+}
+
 func Login(c echo.Context) error {
 	var userName []struct {
 		GoogleNum string `json:"googlenum"`
@@ -61,18 +67,53 @@ func Login(c echo.Context) error {
 		Select(user.FieldGooglenum).
 		Scan(ctx, &userName)
 
-	if userName[0].GoogleNum != nums.Num {
-		return c.String(http.StatusBadRequest, "null")
+	if err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, err)
 	}
+
+	var claims = &jwtCustomClaims{
+		userName[0].GoogleNum,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	t, err := token.SignedString([]byte("chltjdgus123!"))
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"token": t,
+	})
+}
+
+func ReLogin(c echo.Context) error {
+	var userName  []struct {
+		GoogleNum string `json:"googlenum"`
+	}
+	googlenums := c.Get("user").(*jwt.Token)
+	claims := googlenums.Claims.(jwt.MapClaims)
+	name := claims["name"].(string)
+
+	client := db.Config()
+	ctx := context.Background()
+	err := client.User.Query().
+		Where(user.Googlenum(name)).
+		Select(user.FieldGooglenum).
+		Scan(ctx, &userName)
 
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	userName[0].GoogleNum, _ = HashPassword(userName[0].GoogleNum)
-
-	return c.JSON(http.StatusOK, userName) //nolint:govet
+	return c.JSON(http.StatusOK, echo.Map{
+		"token": googlenums.Raw,
+	})
 }
 
 func Hosting(c echo.Context) error {
