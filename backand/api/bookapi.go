@@ -30,7 +30,7 @@ type (
 
 func BookCreate(c echo.Context) error {
 	var plainText []struct {
-		Id		int		`json:"id"`
+		Id        int    `json:"id"`
 		Googlenum string `json:"googlenum"`
 	}
 	req := c.Request()
@@ -86,22 +86,25 @@ func BookRead(c echo.Context) error {
 }
 
 func BookShow(c echo.Context) error {
+
 	client := db.Config()
 	ctx := context.Background()
 	r, err := client.Book.Query().
+		Limit(10).
+		Order(ent.Desc(book.FieldID)).
 		WithUserid(func(q *ent.UserQuery) {
 			q.Select(user.FieldName)
 		}).
 		WithUnitid(func(q *ent.UnitQuery) {
 			q.Select(unit.FieldContentName)
 		}).
-		Limit(10).
-		Order(ent.Desc(book.FieldID)).
+		Select(book.FieldID, book.FieldTitle, book.FieldCreateAt, book.FieldUpdatedAt).
 		All(ctx)
 	if err != nil {
 		log.Println(err)
 		return c.JSON(http.StatusBadRequest, err)
 	}
+
 	return c.JSON(http.StatusOK, r)
 }
 
